@@ -64,7 +64,14 @@ namespace TheMovieDB.Models
             DataServices ds = new DataServices();
             return ds.GetUser(email, password);
         }
-        
+
+        public List<User> GetUsersList()
+        {
+            DataServices ds = new DataServices();
+            return ds.GetUsersList();
+        }
+
+
     } // End of class definition - User.
 
 }

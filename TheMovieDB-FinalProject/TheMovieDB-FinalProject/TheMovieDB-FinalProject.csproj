@@ -180,6 +180,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Pages\adminPage.html" />
     <Content Include="Pages\insert.html" />
     <Content Include="Pages\view.html" />
     <Content Include="Scripts\ajaxCalls.js" />
