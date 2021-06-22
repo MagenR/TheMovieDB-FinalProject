@@ -33,7 +33,7 @@
     <script>
         $(document).ready(function () {
 
-            $('.navbar').on('click', '#usersList', function () {
+            $('.navbar').on('click', '#getUserListBTN', function () {
                 getUsers();
             });
 
@@ -51,7 +51,6 @@
                     let api = "../api/Users";
 
                     ajaxCall("GET", api, "", getUsersSuccessCB, getUsersErrorCB);
-
                 }
 
                 function getUsersSuccessCB(users) {
@@ -101,7 +100,7 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container justify-content-start" id="#nav">
             <h5 class="me-3" id="WlcmMsg">Admin Page</h5>
-            <button type="button" class="btn btn-primary me-3" id="usersList" data-bs-toggle="modal" data-bs-target="#usersListModal">Get users list</button>
+            <button type="button" class="btn btn-primary me-3" id="getUserListBTN">Get users list</button>
         </div>
     </nav>
 
