@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <title></title>
     <style>
-        #tableDiv {
+        #userListDiv {
+            visibility: hidden;
+        }
+        #seriesListDiv {
             visibility: hidden;
         }
     </style>
@@ -31,10 +34,16 @@
 
     <!-- Functions -->
     <script>
+
+        // ---------------------------------------- Constroller functions--------------------------
         $(document).ready(function () {
 
             $('.navbar').on('click', '#getUserListBTN', function () {
                 getUsers();
+            });
+
+            $('.navbar').on('click', '#getSeriesListBTN', function () {
+                getSeries();
             });
 
         });
@@ -64,9 +73,40 @@
                     else
                         swal("Error!", err.responseJSON.Message, "error");
                 }
+            }
+
+            // Series -----------------------------------------------------------------------------
+
+            {
+
+                //--------------------------------------- GET ---------------------------------------
+
+                function getSeries() {
+                    let api = "../api/Series";
+
+                    ajaxCall("GET", api, "", getSeriesSuccessCB, getSeriesErrorCB);
+                }
+
+                function getSeriesSuccessCB(series) {
+                    renderSeries(series);
+                }
+
+                function getSeriesErrorCB(err) {
+                    console.log(err.status + " " + err.responseJSON.Message);
+                    if (err.status == '404')
+                        swal("Error!", "404: " + err.responseJSON.Message, "error");
+                    else
+                        swal("Error!", err.responseJSON.Message, "error");
+                }
+            }
+
+
+            // ---------------------------------------- Functions -------------------------------------
+
+            {
 
                 function renderUsers(users) {
-                    $("#tableDiv").css("visibility", "visible");
+                    $("#userListDiv").css("visibility", "visible");
                     try {
                         tbl = $('#usersList').DataTable({
                             data: users,
@@ -90,7 +130,28 @@
                     }
                 }
 
-
+                function renderSeries(series) {
+                    $("#seriesListDiv").css("visibility", "visible");
+                    try {
+                        tbl = $('#seriesList').DataTable({
+                            data: series,
+                            pageLength: 5,
+                            columns: [
+                                { data: "Tv_id" },
+                                { data: "First_air_date" },
+                                { data: "Name" },
+                                { data: "Origin_country" },
+                                { data: "Original_language" },
+                                { data: "Overview" },
+                                { data: "Poster_path" },
+                                { data: "Popularity" },
+                            ],
+                        });
+                    }
+                    catch (err) {
+                        alert(err);
+                    }
+                }
             }
         }
     </script>
@@ -101,26 +162,44 @@
         <div class="container justify-content-start" id="#nav">
             <h5 class="me-3" id="WlcmMsg">Admin Page</h5>
             <button type="button" class="btn btn-primary me-3" id="getUserListBTN">Get users list</button>
+            <button type="button" class="btn btn-primary me-3" id="getSeriesListBTN">Get Series list</button>
         </div>
     </nav>
 
-    <div id="tableDiv">
-    <table id="usersList" class="display nowrap" style="width:100%">
-        <thead>
-            <tr>
-                <th>User_id</th>
-                <th>Email</th>
-                <th>First_name</th>
-                <th>Last_name</th>
-                <th>Password</th>
-                <th>Phone_num</th>
-                <th>Address</th>
-                <th>Fav_genre</th>
-                <th>Gender</th>
-                <th>Birth_date</th>
-            </tr>
-        </thead>
-    </table>
+    <div id="userListDiv">
+        <table id="usersList" class="display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>User_id</th>
+                    <th>Email</th>
+                    <th>First_name</th>
+                    <th>Last_name</th>
+                    <th>Password</th>
+                    <th>Phone_num</th>
+                    <th>Address</th>
+                    <th>Fav_genre</th>
+                    <th>Gender</th>
+                    <th>Birth_date</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="seriesListDiv">
+        <table id="seriesList" class="display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Tv_id</th>
+                    <th>First_air_date</th>
+                    <th>Name</th>
+                    <th>Origin_country</th>
+                    <th>Original_language</th>
+                    <th>Overview</th>
+                    <th>Poster_path</th>
+                    <th>Popularity</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </body>
 </html>

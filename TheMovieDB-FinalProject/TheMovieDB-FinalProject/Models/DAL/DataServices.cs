@@ -289,6 +289,61 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
+        // Get series list
+        //--------------------------------------------------------------------------------------------------
+        public List<Series> GetAllSeriesList()
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR = "SELECT DISTINCT * FROM TheMovieDB_Preferences_2021 ";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                if (dr.HasRows == false) // no record returned.
+                    return null; // if no series found.
+
+                List<Series> series = new List<Series>();
+
+                while (dr.Read())
+                {
+                    Series s = new Series();
+
+                    s.Tv_id = (int)dr["tv_id"];
+                    s.First_air_date = (DateTime)dr["first_air_date"];
+                    s.Name = (string)dr["name"];
+                    s.Origin_country = (string)dr["origin_country"];
+                    s.Original_language = (string)dr["original_language"];
+                    s.Overview = (string)dr["overview"];
+                    s.Poster_path = (string)dr["poster_path"];
+                    s.Popularity = (float)(double)dr["popularity"];
+
+                    series.Add(s);
+                }
+
+                return series;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------
         // Get list of series the user liked.
         //--------------------------------------------------------------------------------------------------
         public List<Series> GetSeriesList(int user_id)

@@ -67,6 +67,12 @@ namespace TheMovieDB.Models
             return ds.GetSeriesList(user_id);
         }
 
+        public List<Series> GetSeriesList()
+        {
+            DataServices ds = new DataServices();
+            return ds.GetAllSeriesList();
+        }
+
     } // End of class definition - Series.
 
 }
