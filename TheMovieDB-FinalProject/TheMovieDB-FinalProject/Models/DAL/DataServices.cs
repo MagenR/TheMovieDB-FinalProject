@@ -299,7 +299,7 @@ namespace TheMovieDB.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                string selectSTR = "SELECT DISTINCT * FROM TheMovieDB_Preferences_2021 ";
+                string selectSTR = "SELECT DISTINCT * FROM TheMovieDB_Series_2021 ";
 
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -441,6 +441,60 @@ namespace TheMovieDB.Models.DAL
                 }
 
                 return user_series_episodes;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // Get list of episodes
+        //--------------------------------------------------------------------------------------------------
+        public List<Episode> GetEpisodeList()
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR = "SELECT * FROM TheMovieDB_Episodes_2021 "; 
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                if (dr.HasRows == false) // no record returned.
+                    return null; // if no series found.
+
+                List<Episode> episodes = new List<Episode>();
+
+                while (dr.Read())
+                {
+                    Episode e = new Episode();
+
+                    e.Tv_id = (int)dr["tv_id"];
+                    e.Season_number = (int)dr["season_number"];
+                    e.Episode_number = (int)dr["episode_number"];
+                    e.Name = (string)dr["name"];
+                    e.Still_path = (string)dr["still_path"];
+                    e.Overview = (string)dr["overview"];
+                    e.Air_date = (DateTime)dr["air_date"];
+
+                    episodes.Add(e);
+                }
+
+                return episodes;
             }
             catch (Exception ex)
             {

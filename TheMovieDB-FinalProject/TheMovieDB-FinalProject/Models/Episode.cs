@@ -60,6 +60,12 @@ namespace TheMovieDB.Models
             return epList;
         }
 
+        public List<Episode> GetEpisodesList()
+        {
+            DataServices ds = new DataServices();
+            return ds.GetEpisodeList();
+        }
+
     } // End of class definition - Episode.
 
 }

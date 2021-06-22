@@ -11,14 +11,23 @@ namespace TheMovieDB.Controllers
 {
     public class EpisodesController : ApiController
     {
-        /*
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public HttpResponseMessage Get()
         {
-            DataServices ds = new DataServices();
-            return ds.Get();
+            try
+            {
+                Episode e = new Episode();
+                List<Episode> episodes = e.GetEpisodesList();
+                if (episodes == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No Users.");
+                return Request.CreateResponse(HttpStatusCode.OK, episodes);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
+            }
         }
-        */
+
         // GET api/<controller>/5
         public HttpResponseMessage Get(int user_id, int tv_id)
         {
