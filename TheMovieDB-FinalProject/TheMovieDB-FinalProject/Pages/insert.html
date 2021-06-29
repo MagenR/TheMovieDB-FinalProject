@@ -173,7 +173,7 @@
                 function getTVSuccessCB(tv) {
                     series = tv.results[0];
                     tvId = series.id;
-                    getSeasons(series.id);
+                    renderTV(series);
                 }
 
                 function getTVErrorCB(err) {
@@ -372,6 +372,19 @@
                 }
             }
 
+            function renderTV(tv) {
+                $("#series_page").html("");
+                $("#series_page").append(
+                "<img src='" + imagePath + tv.poster_path + "'/>" +
+                "<h2>" + tv.name + "</h2>" +
+                "<p> Vote average: " + tv.vote_average + "<p>" +
+                "<p> Origin country: " + tv.origin_country + "<p>" +
+                "<p> Original language: " + tv.original_language + "<p>" +
+                "<p> Original name: " + tv.original_name + "<p>" +
+                "<p>" + tv.overview + "</p>");
+                getSeasons(tv.id);
+            }
+
             // User commands
 
             function validatePassword() {
@@ -551,10 +564,13 @@
         <input type="text" id="tvShowName" disabled />
         <button id="getTV" disabled>Get TV Show</button>
         <button id="getEps" disabled>List Episodes</button>
+        <div id="series_page">
+        </div>
         <div id="ph">
 
         </div>
     </div>
+
 
     <!-- Bootstrap dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" 
