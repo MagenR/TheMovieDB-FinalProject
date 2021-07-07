@@ -18,20 +18,17 @@ window.addEventListener('DOMContentLoaded', event => {
 });
 
 $(document).ready(function () {
-    getUsers();
 
-    $('.nav').on('click', '#getUserList', function () {
-        getUsers();
-    });
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    var urlParam = urlParams.get('category');
 
-    $('.nav').on('click', '#getSeriesList', function () {
+    if (urlParam == 'episodes')
+         getEpisodes();  
+    else if (urlParam == 'series')
         getSeries();
-    });
-
-    $('.nav').on('click', '#getEpisodesList', function () {
-        getEpisodes();
-    });
-
+    else
+        getUsers();
 });
 
 function getUsers() {
@@ -110,7 +107,7 @@ function renderUsers(users) {
     try {
         tbl = $('#dataTableInsert').DataTable({
             data: users,
-            //pageLength: 5,
+            pageLength: 10,
             columns: [
                 { data: "User_id" },
                 { data: "Email" },
@@ -158,9 +155,9 @@ function renderSeries(series) {
     );
 
     try {
-        tbl = $('#seriesList').DataTable({
+        tbl = $('#dataTableInsert').DataTable({
             data: series,
-            pageLength: 5,
+            pageLength: 10,
             columns: [
                 { data: "Tv_id" },
                 { data: "Name" },
@@ -177,16 +174,39 @@ function renderSeries(series) {
 }
 
 function renderEpisodes(episodes) {
-    $("#episodeListDiv").css("visibility", "visible");
+
+    $('#dataTableInsert').html(
+        '<thead>' +
+        '<tr>' +
+        '<th>Series Id</th>' +
+        '<th>Series Name</th>' +
+        '<th>Season Number</th>' +
+        '<th>Episode Number</th>' +
+        '<th>Episode Name</th>' +
+        '<th>Original Airing</th>' +
+        '</tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '</tbody>' +
+        '<tfoot>' +
+        '<tr>' +
+        '<th>Series Id</th>' +
+        '<th>Series Name</th>' +
+        '<th>Season Number</th>' +
+        '<th>Episode Number</th>' +
+        '<th>Episode Name</th>' +
+        '<th>Original Airing</th>' +
+        '</tr>' +
+        '</tfoot>'
+    );
+
     try {
-        tbl = $('#episodeList').DataTable({
+        tbl = $('#dataTableInsert').DataTable({
             data: episodes,
-            pageLength: 5,
+            pageLength: 10,
             columns: [
-                { data: "Name" },
-                { data: "Still_path" },
-                { data: "Overview" },
                 { data: "Tv_id" },
+                { data: "Name" },
                 { data: "Season_number" },
                 { data: "Episode_number" },
                 { data: "Air_date" },
