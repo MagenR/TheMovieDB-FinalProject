@@ -181,6 +181,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Pages\insert.html" />
+    <Content Include="Pages\seriesPage.html" />
+    <Content Include="Pages\seriesPage.css" />
     <Content Include="Pages\view.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
