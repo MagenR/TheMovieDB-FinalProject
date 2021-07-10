@@ -5,6 +5,11 @@
     <title></title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="personPage.css" rel="stylesheet" />
+    <style>
+        #personPic > img {
+            border-radius: 50%;
+        }
+    </style>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
@@ -23,6 +28,7 @@
             key = "d8484ecfbfb906740724a447b5d63b12";
             url = "https://api.themoviedb.org/";
             imagePath = "https://image.tmdb.org/t/p/w500";
+            personId = 9280;
             getPerson(personId);
         });
 
@@ -37,19 +43,40 @@
             }
 
             function getPersonSuccessCB(person) {
-                $('#personPic').append('<img class="media-object mw150 src="' + person.profile_path + '"/>')
+                $('#personPic').append('<img class="img-fluid" src="' + imagePath + person.profile_path + '"/>');
                 $('#personName').append(person.name);
                 $('#biography').append(person.biography);
-                $('known_for').append(person.known_for_department);
-                $('gender').append(person.gender);
-                $('birthday').append(person.birthday);
-                $('place_of_birth').append(person.place_of_birth);
-                for (let i = 0; i < person.also_known_as; i++) {
-                    $('known_as').append(person.also_known_as[i]);
-                }
+                $('#known_for').append(person.known_for_department);
+                if (person.gender == 1) { gender = 'female' } else gender = 'male';
+                $('#gender').append(gender);
+                $('#birthday').append(person.birthday);
+                $('#place_of_birth').append(person.place_of_birth);
+                getPersonMovies(personId);
             }
 
             function getPersonErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
+        // Person in movie --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getPersonMovies(personId) {
+                let apiCall = url + "3/person/" + personId + "/movie_credits?" + "api_key=" + key;
+
+                ajaxCall("GET", apiCall, "", getPersonInMovieSuccessCB, getPersonInMovieErrorCB);
+            }
+
+            function getPersonInMovieSuccessCB(movie) {
+                movies = movie.cast
+                for (let i = 0; i < movies.length; i++) {
+                    $('#movies').append('<div class= "card me-2" style = "width: 18rem;"><img class="card-img-top" src="' + imagePath + movies[i].poster_path + '"/></div>');
+                }
+            }
+
+            function getPersonInMovieErrorCB(err) {
                 console.log(err.status + " " + err.responseJSON.Message);
             }
         }
@@ -64,17 +91,14 @@
                 <div class="media-body va-m">
                     <h2 class="media-heading" id="personName"></h2>
                     <p class="lead" id="biography"></p>
-                    </div>
                 </div>
             </div>
+        </div>
 
         <div class="row">
             <div class="col-md-4">
                 <div class="panel">
                     <div class="panel-heading">
-                        <span class="panel-icon">
-                            <i class="fa fa-pencil"></i>
-                        </span>
                         <span class="panel-title">About Me</span>
                     </div>
                     <div class="panel-body pb5">
@@ -101,12 +125,6 @@
 
                         <p class="text-muted pb10" id="place_of_birth"></p>
 
-                        <hr class="short br-lighter">
-
-                        <h6>Known as</h6>
-
-                        <p class="text-muted pb10" id="known_as"></p>
-
                     </div>
                 </div>
             </div>
@@ -115,10 +133,10 @@
                 <div class="tab-block">
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a href="#tab1" data-toggle="tab">Activity</a>
+                            <a href="#tab1" data-toggle="tab">Movies</a>
                         </li>
                         <li>
-                            <a href="#tab1" data-toggle="tab">Social</a>
+                            <a href="#tab1" data-toggle="tab">Tv</a>
                         </li>
                         <li>
                             <a href="#tab1" data-toggle="tab">Media</a>
@@ -126,93 +144,69 @@
                     </ul>
                     <div class="tab-content p30" style="height: 730px;">
                         <div id="tab1" class="tab-pane active">
-                            <div class="media">
-                                <a class="pull-left" href="#"> <img class="media-object mn thumbnail mw50" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="..."> </a>
-                                <div class="media-body">
-                                    <h5 class="media-heading mb20">
-                                        Simon Rivers Posted
-                                        <small> - 3 hours ago</small>
-                                    </h5>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="mw140 mr25 mb20">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar8.png" class="mw140 mr25 mb20">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="mw140 mb20">
-                                    <div class="media-links">
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-thumbs-o-up text-primary mr5"></span> Like
-                                        </span>
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-share text-primary mr5"></span> Share
-                                        </span>
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-floppy-o text-primary mr5"></span> Save
-                                        </span>
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-comment text-primary mr5"></span> Comment
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="media mt25">
-                                <a class="pull-left" href="#"> <img class="media-object mn thumbnail thumbnail-sm rounded mw40" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="..."> </a>
-                                <div class="media-body mb5">
-                                    <h5 class="media-heading mbn">
-                                        Simon Rivers Posted
-                                        <small> - 3 hours ago</small>
-                                    </h5>
-                                    <p> Omg so freaking sweet dude.</p>
-                                    <div class="media pb10">
-                                        <a class="pull-left" href="#"> <img class="media-object mn thumbnail thumbnail-sm rounded mw40" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="..."> </a>
+                            <div class="media mt25" id="movies">
+                                <!--<a class="pull-left" href="#"> <img class="media-object mn thumbnail thumbnail-sm rounded mw40" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="..."> </a>
                                         <div class="media-body mb5">
                                             <h5 class="media-heading mbn">
-                                                Jessica Wong
+                                                Simon Rivers Posted
                                                 <small> - 3 hours ago</small>
                                             </h5>
-                                            <p>Omgosh I'm in love</p>
+                                            <p> Omg so freaking sweet dude.</p>
+                                            <div class="media pb10">
+                                                <a class="pull-left" href="#"> <img class="media-object mn thumbnail thumbnail-sm rounded mw40" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="..."> </a>
+                                                <div class="media-body mb5">
+                                                    <h5 class="media-heading mbn">
+                                                        Jessica Wong
+                                                        <small> - 3 hours ago</small>
+                                                    </h5>
+                                                    <p>Omgosh I'm in love</p>
+                                                </div>
+                                            </div>
+                                            <div class="media mtn">
+                                                <a class="pull-left" href="#"> <img class="media-object mn thumbnail thumbnail-sm rounded mw40" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="..."> </a>
+                                                <div class="media-body mb5">
+                                                    <h5 class="media-heading mbn">
+                                                        Jessica Wong
+                                                        <small> - 3 hours ago</small>
+                                                    </h5>
+                                                    <p>Omgosh I'm in love</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="media mtn">
-                                        <a class="pull-left" href="#"> <img class="media-object mn thumbnail thumbnail-sm rounded mw40" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="..."> </a>
-                                        <div class="media-body mb5">
-                                            <h5 class="media-heading mbn">
-                                                Jessica Wong
+                                    <div class="media mt25">
+                                        <a class="pull-left" href="#"> <img class="media-object thumbnail mw50" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="..."> </a>
+                                        <div class="media-body">
+                                            <h5 class="media-heading mb20">
+                                                Simon Rivers Posted
                                                 <small> - 3 hours ago</small>
                                             </h5>
-                                            <p>Omgosh I'm in love</p>
+                                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="mw140 mr25 mb20">
+                                            <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="mw140 mr25 mb20">
+                                            <img src="https://bootdey.com/img/Content/avatar/avatar4.png" class="mw140 mb20">
+                                            <div class="media-links">
+                                                <span class="text-light fs12 mr10">
+                                                    <span class="fa fa-thumbs-o-up text-primary mr5"></span> Like
+                                                </span>
+                                                <span class="text-light fs12 mr10">
+                                                    <span class="fa fa-share text-primary mr5"></span> Share
+                                                </span>
+                                                <span class="text-light fs12 mr10">
+                                                    <span class="fa fa-floppy-o text-primary mr5"></span> Save
+                                                </span>
+                                                <span class="text-light fs12 mr10">
+                                                    <span class="fa fa-comment text-primary mr5"></span> Comment
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="media mt25">
-                                <a class="pull-left" href="#"> <img class="media-object thumbnail mw50" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="..."> </a>
-                                <div class="media-body">
-                                    <h5 class="media-heading mb20">
-                                        Simon Rivers Posted
-                                        <small> - 3 hours ago</small>
-                                    </h5>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="mw140 mr25 mb20">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="mw140 mr25 mb20">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar4.png" class="mw140 mb20">
-                                    <div class="media-links">
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-thumbs-o-up text-primary mr5"></span> Like
-                                        </span>
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-share text-primary mr5"></span> Share
-                                        </span>
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-floppy-o text-primary mr5"></span> Save
-                                        </span>
-                                        <span class="text-light fs12 mr10">
-                                            <span class="fa fa-comment text-primary mr5"></span> Comment
-                                        </span>
-                                    </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
-                        <div id="tab2" class="tab-pane"></div>
-                        <div id="tab3" class="tab-pane"></div>
-                        <div id="tab4" class="tab-pane"></div>
                     </div>
+                    <div id="tab2" class="tab-pane"></div>
+                    <div id="tab3" class="tab-pane"></div>
+                    <div id="tab4" class="tab-pane"></div>
                 </div>
             </div>
         </div>
