@@ -17,7 +17,7 @@ namespace TheMovieDB.Controllers
             try
             {
                 Episode e = new Episode();
-                List<Episode> episodes = e.GetEpisodesList();
+                List<Episode> episodes = e.GetEpisodeList();
                 if (episodes == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No Users.");
                 return Request.CreateResponse(HttpStatusCode.OK, episodes);
@@ -34,7 +34,7 @@ namespace TheMovieDB.Controllers
             try
             {
                 Episode ep = new Episode();
-                List<Episode> epList = ep.Get(user_id, tv_id);
+                List<Episode> epList = ep.GetEpisodeList(user_id, tv_id);
                 if (epList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No saved episodes exist for user id " + user_id);
                 return Request.CreateResponse(HttpStatusCode.OK, epList);
@@ -44,7 +44,25 @@ namespace TheMovieDB.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
             }
         }
-
+        
+        [HttpGet]
+        [Route("api/Episodes/Admin")]
+        public HttpResponseMessage GetFavEpsByUsers()
+        {
+            try
+            {
+                Episode ep = new Episode();
+                List<Episode> epList = ep.GetEpisodeListCountFavs();
+                if (epList == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No saved episodes exist ");
+                return Request.CreateResponse(HttpStatusCode.OK, epList);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
+            }
+        }
+        
         // POST api/Episodes
         public HttpResponseMessage Post([FromBody] Episode ep)
         {

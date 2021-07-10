@@ -68,7 +68,7 @@ namespace TheMovieDB.Models
         public List<User> GetUsersList()
         {
             DataServices ds = new DataServices();
-            return ds.GetUsersList();
+            return ds.GetUserList();
         }
 
 

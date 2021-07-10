@@ -14,7 +14,7 @@ namespace TheMovieDB.Models
 
         // Fields ---------------------------------------------------------------------------------
 
-        int tv_id;
+        int tv_id, favCount;
         DateTime first_air_date;
         string name, origin_country, original_language, overview, poster_path;
         float popularity;
@@ -29,6 +29,7 @@ namespace TheMovieDB.Models
         public string Overview { get => overview; set => overview = value; }
         public string Poster_path { get => poster_path; set => poster_path = value; }
         public float Popularity { get => popularity; set => popularity = value; }
+        public int FavCount { get => favCount; set => favCount = value; }
 
         // Constructors ---------------------------------------------------------------------------
 
@@ -60,17 +61,25 @@ namespace TheMovieDB.Models
             return 0; // Failure adding.
         }
 
-        // Returns the user.
-        public List<Series> Get(int user_id)
+        // Returns list of all series in the DB.
+        public List<Series> GetSeriesList()
+        {
+            DataServices ds = new DataServices();
+            return ds.GetSeriesList();
+        }
+
+        // Returns list of series a certain user liked.
+        public List<Series> GetSeriesList(int user_id)
         {
             DataServices ds = new DataServices();
             return ds.GetSeriesList(user_id);
         }
 
-        public List<Series> GetSeriesList()
+        // Returns list of series for admin use, with favourites count.
+        public List<Series> GetSeriesListCountFavs()
         {
             DataServices ds = new DataServices();
-            return ds.GetAllSeriesList();
+            return ds.GetSeriesListCountFavs();
         }
 
     } // End of class definition - Series.

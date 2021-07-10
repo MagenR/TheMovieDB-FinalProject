@@ -36,7 +36,7 @@ namespace TheMovieDB.Controllers
             try
             {
                 Series series = new Series();
-                List<Series> seriesList = series.Get(user_id);
+                List<Series> seriesList = series.GetSeriesList(user_id);
                 if (seriesList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No series preferences exist for user id " + user_id);
                 return Request.CreateResponse(HttpStatusCode.OK, seriesList);
@@ -46,7 +46,25 @@ namespace TheMovieDB.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
             }
         }
-        
+
+        // Admin version for get.
+        [HttpGet]
+        [Route("api/Series/Admin")]
+        public HttpResponseMessage GetCountFavs()
+        {
+            try
+            {
+                Series series = new Series();
+                List<Series> seriesList = series.GetSeriesListCountFavs();
+                if (seriesList == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No saved episodes exist ");
+                return Request.CreateResponse(HttpStatusCode.OK, seriesList);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
+            }
+        }
 
         // POST api/Series
         public HttpResponseMessage Post([FromBody] Series s)

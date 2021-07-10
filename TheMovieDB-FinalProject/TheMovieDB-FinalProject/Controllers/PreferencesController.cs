@@ -29,7 +29,7 @@ namespace TheMovieDB.Controllers
         public HttpResponseMessage Post([FromBody] Preference p)
         {
             if (p.Insert() == 0)
-                return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Cannot add the episode to the current usere's preferences.");
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Cannot add the episode to the current user's preferences.");
             return Request.CreateResponse(HttpStatusCode.OK, "Episode was succesfully added to the user's preferences.");
         }
 

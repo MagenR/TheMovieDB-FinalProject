@@ -27,6 +27,18 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
+        // Create the SqlCommand.
+        //--------------------------------------------------------------------------------------------------
+        private SqlCommand CreateCommand(SqlConnection con)
+        {
+            SqlCommand cmd = new SqlCommand(); // create the command object
+            cmd.Connection = con;              // assign the connection to the command object
+            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+            cmd.CommandType = CommandType.Text; // the type of the command, can also be stored procedure
+            return cmd;
+        }
+
+        //--------------------------------------------------------------------------------------------------
         // append the Insert command text with values of given object to given command object.
         //--------------------------------------------------------------------------------------------------
         private void BuildInsertCommand(SqlCommand cmd, object o)
@@ -71,7 +83,7 @@ namespace TheMovieDB.Models.DAL
                 cmd.Parameters.Add("@episode_number", SqlDbType.Int);
                 cmd.Parameters["@episode_number"].Value = e.Episode_number;
 
-                cmd.Parameters.AddWithValue("@name", e.Name);
+                cmd.Parameters.AddWithValue("@name", e.Episode_name);
                 cmd.Parameters.AddWithValue("@still_path", e.Still_path);
                 cmd.Parameters.AddWithValue("@overview", e.Overview);
 
@@ -121,18 +133,6 @@ namespace TheMovieDB.Models.DAL
                 cmd.Parameters["@episode_number"].Value = p.EpisodePreference.Episode_number;
             }
 
-        }
-
-        //--------------------------------------------------------------------------------------------------
-        // Create the SqlCommand.
-        //--------------------------------------------------------------------------------------------------
-        private SqlCommand CreateCommand(SqlConnection con)
-        {
-            SqlCommand cmd = new SqlCommand(); // create the command object
-            cmd.Connection = con;              // assign the connection to the command object
-            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-            cmd.CommandType = CommandType.Text; // the type of the command, can also be stored procedure
-            return cmd;
         }
 
         //--------------------------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
-        // Get user credentials
+        // Get user credentials.
         //--------------------------------------------------------------------------------------------------
         public User GetUser(string email, string password)
         {
@@ -235,9 +235,9 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
-        // Get list of users
+        // Get list of all users in db.
         //--------------------------------------------------------------------------------------------------
-        public List<User> GetUsersList()
+        public List<User> GetUserList()
         {
             SqlConnection con = null;
 
@@ -289,9 +289,9 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
-        // Get series list
+        // Get list of all series in db.
         //--------------------------------------------------------------------------------------------------
-        public List<Series> GetAllSeriesList()
+        public List<Series> GetSeriesList()
         {
             SqlConnection con = null;
 
@@ -344,7 +344,7 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
-        // Get list of series the user liked.
+        // Get list of series a single user liked.
         //--------------------------------------------------------------------------------------------------
         public List<Series> GetSeriesList(int user_id)
         {
@@ -367,7 +367,7 @@ namespace TheMovieDB.Models.DAL
 
                 List<Series> user_series = new List<Series>();
 
-                while(dr.Read())
+                while (dr.Read())
                 {
                     Series s = new Series();
 
@@ -377,7 +377,7 @@ namespace TheMovieDB.Models.DAL
                     s.Origin_country = (string)dr["origin_country"];
                     s.Original_language = (string)dr["original_language"];
                     s.Overview = (string)dr["overview"];
-                    s.Poster_path = (string)dr["poster_path"];          
+                    s.Poster_path = (string)dr["poster_path"];
                     s.Popularity = (float)(double)dr["popularity"];
 
                     user_series.Add(s);
@@ -401,9 +401,112 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
+        // Get list of all series in db with favourite count. Admin version.
+        //--------------------------------------------------------------------------------------------------
+        public List<Series> GetSeriesListCountFavs()
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                string selectSTR = "SELECT s.tv_id, s.name, s.first_air_date, s.origin_country, s.original_language, s.popularity, COUNT(distinct User_id) as '#_of_favs' FROM TheMovieDB_Preferences_2021 as p inner join TheMovieDB_Series_2021 as s on p.tv_id = s.tv_id GROUP BY s.tv_id, s.name, s.first_air_date, s.origin_country, s.original_language, s.popularity";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                if (dr.HasRows == false)
+                    return null;
+                List<Series> series = new List<Series>();
+                
+                while (dr.Read())
+                {
+                    Series s = new Series();
+
+                    s.Tv_id = (int)dr["tv_id"];
+                    s.Name = (string)dr["name"];
+                    s.First_air_date = (DateTime)dr["first_air_date"];
+                    s.Origin_country = (string)dr["origin_country"];
+                    s.Original_language = (string)dr["original_language"];
+                    s.Popularity = (float)(double)dr["popularity"];
+                    s.FavCount = (int)dr["#_of_favs"];
+
+                    series.Add(s);
+                }
+
+                return series;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // Get list of episodes.
+        //--------------------------------------------------------------------------------------------------
+        public List<Episode> GetEpisodeList()
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR = "SELECT * FROM TheMovieDB_Episodes_2021 ";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                if (dr.HasRows == false) // no record returned.
+                    return null; // if no series found.
+
+                List<Episode> episodes = new List<Episode>();
+
+                while (dr.Read())
+                {
+                    Episode e = new Episode();
+
+                    e.Tv_id = (int)dr["tv_id"];
+                    e.Season_number = (int)dr["season_number"];
+                    e.Episode_number = (int)dr["episode_number"];
+                    e.Episode_name = (string)dr["name"];
+                    e.Still_path = (string)dr["still_path"];
+                    e.Overview = (string)dr["overview"];
+                    e.Air_date = (DateTime)dr["air_date"];
+
+                    episodes.Add(e);
+                }
+
+                return episodes;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------
         // Get list of episodes the user liked according to series.
         //--------------------------------------------------------------------------------------------------
-        public List<Episode> GetSeriesEpisodeList(int user_id, int tv_id)
+        public List<Episode> GetEpisodeList(int user_id, int tv_id)
         {
             SqlConnection con = null;
 
@@ -432,7 +535,7 @@ namespace TheMovieDB.Models.DAL
                     e.Tv_id = (int)dr["tv_id"];
                     e.Season_number = (int)dr["season_number"];
                     e.Episode_number = (int)dr["episode_number"];
-                    e.Name = (string)dr["name"];
+                    e.Episode_name = (string)dr["name"];
                     e.Still_path = (string)dr["still_path"];
                     e.Overview = (string)dr["overview"];
                     e.Air_date = (DateTime)dr["air_date"];
@@ -458,9 +561,9 @@ namespace TheMovieDB.Models.DAL
         }
 
         //--------------------------------------------------------------------------------------------------
-        // Get list of episodes
+        // Get list of all episodes in db with favourite count. Admin version.
         //--------------------------------------------------------------------------------------------------
-        public List<Episode> GetEpisodeList()
+        public List<Episode> GetEpisodeListCountFavs()
         {
             SqlConnection con = null;
 
@@ -468,7 +571,7 @@ namespace TheMovieDB.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                string selectSTR = "SELECT * FROM TheMovieDB_Episodes_2021 "; 
+                string selectSTR = "SELECT s.tv_id, s.name as 'series name', e.name as 'episode name', e.season_number, e.episode_number, e.air_date, COUNT(User_id) as '# of favourites' FROM TheMovieDB_Preferences_2021 as p inner join TheMovieDB_Episodes_2021 as e on p.tv_id = e.tv_id and p.season_number = e.season_number and p.episode_number = e.episode_number inner join TheMovieDB_Series_2021 as s on p.tv_id = s.tv_id GROUP BY s.tv_id, s.name, e.name, e.season_number, e.episode_number, e.air_date";
 
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -484,12 +587,12 @@ namespace TheMovieDB.Models.DAL
                     Episode e = new Episode();
 
                     e.Tv_id = (int)dr["tv_id"];
+                    e.Series_name = (string)dr["series name"];
+                    e.Episode_name = (string)dr["episode name"];
                     e.Season_number = (int)dr["season_number"];
                     e.Episode_number = (int)dr["episode_number"];
-                    e.Name = (string)dr["name"];
-                    e.Still_path = (string)dr["still_path"];
-                    e.Overview = (string)dr["overview"];
                     e.Air_date = (DateTime)dr["air_date"];
+                    e.FavCount = (int)dr["# of favourites"];
 
                     episodes.Add(e);
                 }

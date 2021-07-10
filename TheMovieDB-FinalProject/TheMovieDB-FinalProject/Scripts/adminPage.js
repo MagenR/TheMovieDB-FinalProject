@@ -31,6 +31,9 @@ $(document).ready(function () {
         getUsers();
 });
 
+// ---------------------------------------------- Getters ----------------------------------------------
+
+// Get users list for admin use.
 function getUsers() {
     let api = "../api/Users";
 
@@ -41,18 +44,9 @@ function getUsersSuccessCB(users) {
     renderUsers(users);
 }
 
-function getEpisodes() {
-    let api = "../api/Episodes";
-
-    ajaxCall("GET", api, "", getEpisodesSuccessCB, getErrorCB);
-}
-
-function getEpisodesSuccessCB(episodes) {
-    renderEpisodes(episodes);
-}
-
+// Get series list for admin use.
 function getSeries() {
-    let api = "../api/Series";
+    let api = "../api/Series/Admin";
 
     ajaxCall("GET", api, "", getSeriesSuccessCB, getErrorCB);
 }
@@ -61,6 +55,18 @@ function getSeriesSuccessCB(series) {
     renderSeries(series);
 }
 
+// Get episodes list for admin use.
+function getEpisodes() {
+    let api = "../api/Episodes/Admin";
+
+    ajaxCall("GET", api, "", getEpisodesSuccessCB, getErrorCB);
+}
+
+function getEpisodesSuccessCB(episodes) {
+    renderEpisodes(episodes);
+}
+
+// Error function for getters, returns swal message.
 function getErrorCB(err) {
     console.log(err.status + " " + err.responseJSON.Message);
     if (err.status == '404')
@@ -68,6 +74,8 @@ function getErrorCB(err) {
     else
         swal("Error!", err.responseJSON.Message, "error");
 }
+
+// ---------------------------------------------- List Renders ----------------------------------------------
 
 function renderUsers(users) {
 
@@ -118,7 +126,12 @@ function renderUsers(users) {
                 { data: "Address" },
                 { data: "Fav_genre" },
                 { data: "Gender" },
-                { data: "Birth_date" },
+                {
+                    data: "Birth_date",
+                    render: function(data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                },
             ],
         });
     }
@@ -138,6 +151,7 @@ function renderSeries(series) {
         '<th>Origin</th>' +
         '<th>Language</th>' +
         '<th>Popularity</th>' +
+        '<th># of Favourites</th>' +
         '</tr>' +
         '</thead>' +
         '<tbody>' +
@@ -150,6 +164,7 @@ function renderSeries(series) {
         '<th>Origin</th>' +
         '<th>Language</th>' +
         '<th>Popularity</th>' +
+        '<th># of Favourites</th>' +
         '</tr>' +
         '</tfoot>'
     );
@@ -161,10 +176,16 @@ function renderSeries(series) {
             columns: [
                 { data: "Tv_id" },
                 { data: "Name" },
-                { data: "First_air_date" },
+                {
+                    data: "First_air_date",
+                    render: function(data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                },
                 { data: "Origin_country" },
                 { data: "Original_language" },
                 { data: "Popularity" },
+                { data: "FavCount" },
             ],
         });
     }
@@ -180,10 +201,11 @@ function renderEpisodes(episodes) {
         '<tr>' +
         '<th>Series Id</th>' +
         '<th>Series Name</th>' +
+        '<th>Episode Name</th>' +
         '<th>Season Number</th>' +
         '<th>Episode Number</th>' +
-        '<th>Episode Name</th>' +
         '<th>Original Airing</th>' +
+        '<th># of Favourites</th>' +
         '</tr>' +
         '</thead>' +
         '<tbody>' +
@@ -192,10 +214,11 @@ function renderEpisodes(episodes) {
         '<tr>' +
         '<th>Series Id</th>' +
         '<th>Series Name</th>' +
+        '<th>Episode Name</th>' +
         '<th>Season Number</th>' +
         '<th>Episode Number</th>' +
-        '<th>Episode Name</th>' +
         '<th>Original Airing</th>' +
+        '<th># of Favourites</th>' +
         '</tr>' +
         '</tfoot>'
     );
@@ -206,10 +229,17 @@ function renderEpisodes(episodes) {
             pageLength: 10,
             columns: [
                 { data: "Tv_id" },
-                { data: "Name" },
+                { data: "Series_name" },
+                { data: "Episode_name" },
                 { data: "Season_number" },
                 { data: "Episode_number" },
-                { data: "Air_date" },
+                {
+                    data: "Air_date",
+                    render: function (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                },
+                { data: "FavCount"}
             ],
         });
     }
