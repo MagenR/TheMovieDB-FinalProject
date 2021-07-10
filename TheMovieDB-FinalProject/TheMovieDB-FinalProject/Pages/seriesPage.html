@@ -43,10 +43,13 @@
         }
 
         #backdrop_path > img {
-            padding-top:50px;
-            height: 500px;
+            padding-top: 50px;
+            height: 400px;
         }
 
+        .card-body{
+            width: 400px;
+        }
     </style>
     <!-- JQuerry -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -74,12 +77,12 @@
 
         function renderSeries() {
             series = JSON.parse(window.localStorage.getItem('series'));
-            $('#header_section').css('background', 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6) ), url(' + imagePath + series.backdrop_path + ')');
+            $('#header_section').css('background', 'linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8) ), url(' + imagePath + series.backdrop_path + ')');
             $('#header_section').css('background-size', 'cover');
             $('#navbarSeries').append(series.name);
             $('#header').append(series.name + "<br>");
             $('#overview').append(series.overview);
-            $('#backdrop_path').append("<img class='img-fluid rounded-3 my-5' src='" + imagePath + series.poster_path + "'/>");
+            $('#backdrop_path').append("<img class='img-fluid  rounded-3  my-5' src='" + imagePath + series.poster_path + "'/>");
             $('#vote_average').append(series.vote_average);
             $('#origin_country').append(series.origin_country);
             $('#original_language').append(series.original_language);
@@ -105,86 +108,106 @@
                 getPerson(personId);
             }
         }
+        // Person --------------------------------------------------------------------
 
-        function getPerson() {
-            let apiCall = url + "3/person/" + personId + "?" + "api_key=" + key;
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getPerson() {
+                let apiCall = url + "3/person/" + personId + "?" + "api_key=" + key;
 
-            ajaxCall("GET", apiCall, "", getPersonSuccessCB, getPersonErrorCB);
-        }
-
-        function getPersonSuccessCB(person) {
-            $("#cast").append('<div class="card"> <img class="cast" src="' + imagePath + person.profile_path +
-                '"/><p class= "small text-muted">' + person.name + '</p></div>');
-        }
-
-        function getPersonErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-        }
-
-        function getReviews() {
-            let apiCall = url + "3/tv/" + series.id + "/reviews?" + "api_key=" + key;
-
-            ajaxCall("GET", apiCall, "", getReviewsSuccessCB, getReviewsErrorCB);
-        }
-
-        function getReviewsSuccessCB(reviews) {
-            reviewsList = reviews.results;
-
-            try {
-                tbl = $('#reviewsTable').DataTable({
-                    data: reviewsList,
-                    pageLength: 5,
-                    columns: [
-                        { data: "author" },
-                        { data: "content" },
-                        { data: "created_at" },
-                        { data: "updated_at" },
-                    ],
-                });
+                ajaxCall("GET", apiCall, "", getPersonSuccessCB, getPersonErrorCB);
             }
-            catch (err) {
-                alert(err);
+
+            function getPersonSuccessCB(person) {
+                $("#cast").append('<div class="card"> <img class="cast" src="' + imagePath + person.profile_path +
+                    '"/><p class= "small text-muted">' + person.name + '</p></div>');
+            }
+
+            function getPersonErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
             }
         }
 
-        function getReviewsErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-        }
+        // Reviews --------------------------------------------------------------------
 
-        function getVideos() {
-            let apiCall = url + "3/tv/" + series.id + "/videos?" + "api_key=" + key;
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getReviews() {
+                let apiCall = url + "3/tv/" + series.id + "/reviews?" + "api_key=" + key;
 
-            ajaxCall("GET", apiCall, "", getVideosSuccessCB, getVideosErrorCB);
-        }
+                ajaxCall("GET", apiCall, "", getReviewsSuccessCB, getReviewsErrorCB);
+            }
 
-        function getVideosSuccessCB(video) {
-            videos = video.results;
-            for (let i = 0; i < videos.length; i++) {
-                $('#videos').append('<iframe width="400" height="300" src="' + youtubeUrl + videos[i].key + '"></iframe>');
+            function getReviewsSuccessCB(reviews) {
+                reviewsList = reviews.results;
+
+                try {
+                    tbl = $('#reviewsTable').DataTable({
+                        data: reviewsList,
+                        pageLength: 5,
+                        columns: [
+                            { data: "author" },
+                            { data: "content" },
+                            { data: "created_at" },
+                            { data: "updated_at" },
+                        ],
+                    });
+                }
+                catch (err) {
+                    alert(err);
+                }
+            }
+
+            function getReviewsErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
             }
         }
 
-        function getVideosErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-        }
+        // Videos --------------------------------------------------------------------
 
-        function getSimilarTv() {
-            let apiCall = url + "3/tv/" + series.id + "/similar?" + "api_key=" + key;
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getVideos() {
+                let apiCall = url + "3/tv/" + series.id + "/videos?" + "api_key=" + key;
 
-            ajaxCall("GET", apiCall, "", getSimilarSuccessCB, getSimilarErrorCB);
-        }
+                ajaxCall("GET", apiCall, "", getVideosSuccessCB, getVideosErrorCB);
+            }
 
-        function getSimilarSuccessCB(similar) {
-            similarTv = similar.results;
-            for (let i = 0; i < similarTv.length; i++) {
-                $("#Recommendations").append('<div class="card"> <img class="similarTv" src="' + imagePath + similarTv[i].poster_path +
-                    '"/><br><p class= "small text-muted">' + similarTv[i].name + '</p><p class= "small text-muted">' + (similarTv[i].vote_average) * 10 + '%</p></div>');
+            function getVideosSuccessCB(video) {
+                videos = video.results;
+                for (let i = 0; i < videos.length; i++) {
+                    $('#videos').append('<iframe width="400" height="300" src="' + youtubeUrl + videos[i].key + '"></iframe>');
+                }
+            }
+
+            function getVideosErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
             }
         }
 
-        function getSimilarErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
+        // Similar Tv Shows --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getSimilarTv() {
+                let apiCall = url + "3/tv/" + series.id + "/similar?" + "api_key=" + key;
+
+                ajaxCall("GET", apiCall, "", getSimilarSuccessCB, getSimilarErrorCB);
+            }
+
+            function getSimilarSuccessCB(similar) {
+                similarTv = similar.results;
+                for (let i = 0; i < similarTv.length; i++) {
+                    $("#Recommendations").append('<div class="card"> <img class="similarTv" src="' + imagePath + similarTv[i].poster_path +
+                        '"/><br><p class= "small text-muted">' + similarTv[i].name + '</p><p class= "small text-muted">' + (similarTv[i].vote_average) * 10 + '%</p></div>');
+                }
+            }
+
+            function getSimilarErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
+            }
         }
+
     </script>
 </head>
 <body class="d-flex flex-column">
@@ -233,7 +256,7 @@
                     </div>
                     <div class="col-xl-4">
                         <div class="card border-0">
-                            <div class="card-body p-4">
+                            <div class="card-body">
                                 <div class="d-flex h-100 align-items-center justify-content-center">
                                     <div class="text-center">
                                         <h2 class="fw-bolder fs-5 mb-4">Facts</h2>

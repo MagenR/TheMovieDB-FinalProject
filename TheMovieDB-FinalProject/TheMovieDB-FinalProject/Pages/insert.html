@@ -245,13 +245,12 @@
                     ajaxCall("GET", apiCall, "", getCastSuccessCB, getCastErrorCB);
                 }
 
-                function getCastSuccessCB(o) {
-                    cast = o.cast;
+                function getCastSuccessCB(c) {
+                    cast = c.cast;
                     localStorage.setItem('seasons', JSON.stringify(seasons));
                     localStorage.setItem('series', JSON.stringify(series));
                     localStorage.setItem('cast', JSON.stringify(cast));
                     window.location.replace("seriesPage.html");
-                    renderSeasonsList(seasons);
                 }
 
                 function getCastErrorCB(err) {
@@ -367,14 +366,6 @@
                 today = yyyy + '-' + mm + '-' + dd;
                 document.getElementById("birthYearTB").setAttribute("max", today);
             }
-
-            //function renderSeasonsList(tv) {
-            //    $("#ph").html("");
-            //    seasons = tv.seasons;
-            //    for (let i = 0; i < seasons.length; i++) {
-            //        $("#ph").append('<img class="season" src="' + imagePath + seasons[i].poster_path + '" data-seasonNum="' + i + '"/>');
-            //    }
-            //}
 
             function renderEpisodes(season) {
                 $("#ph").html("");
