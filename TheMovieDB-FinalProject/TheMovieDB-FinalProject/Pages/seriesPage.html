@@ -47,9 +47,24 @@
             height: 400px;
         }
 
-        .card-body{
+        .card-body {
             width: 400px;
+            text-align: justify;
         }
+
+        .season:hover {
+            background-color: darkgrey !important;
+            cursor: pointer;
+        }
+
+        .season:active {
+            background-color: grey !important;
+        }
+
+        #episodes_section{
+            visibility:hidden;
+        }
+
     </style>
     <!-- JQuerry -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -73,7 +88,11 @@
             youtubeUrl = "https://www.youtube.com/embed/";
             renderSeries();
 
+            $('#seasons').on('click', '.season', function () {
+                getSeason($(this).attr('data-seasonNum'));
+            });
         });
+
 
         function renderSeries() {
             series = JSON.parse(window.localStorage.getItem('series'));
@@ -97,7 +116,7 @@
         function renderSeasonsList() {
             seasons = JSON.parse(window.localStorage.getItem('seasons'));
             for (let i = 0; i < seasons.length; i++) {
-                $("#seasons").append('<div class="card"> <img class="season" src="' + imagePath + seasons[i].poster_path + '" data-seasonNum="' + i + '"/> </div>');
+                $("#seasons").append('<div class="card"> <img class="season" src="' + imagePath + seasons[i].poster_path + '" data-seasonNum="' + (i + 1) + '"/></div>');
             }
         }
 
@@ -108,6 +127,41 @@
                 getPerson(personId);
             }
         }
+
+        function renderEpisodes(season) {
+            $('.episode').remove();
+            episodes = season.episodes;
+            $('#episodes_section').css('visibility', 'visible');
+            $("#episodes").append('<h2 class="fw-bolder episode">' + season.name + '</h2>');
+            for (let i = 0; i < episodes.length; i++) {
+                $("#episodes").append('<div class="card"> <img class="episode" src="' + imagePath + episodes[i].still_path +
+                    '"/><p class= "small text-left episode card-body">' + episodes[i].name + '<br>' + episodes[i].overview + '</p></div>');
+
+            }
+        }
+
+        // Season episodes --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+
+            function getSeason(seasonNum) {
+                let apiCall = url + "3/tv/" + series.id + "/season/" + seasonNum + "?" + "api_key=" + key;
+                ajaxCall("GET", apiCall, "", getSeasonSuccessCB, getSeasonErrorCB)
+            }
+
+            function getSeasonSuccessCB(episodes) {
+                renderEpisodes(episodes);
+            }
+
+            function getSeasonErrorCB(err) {
+                if (seasonNumber == 0)
+                    getSeason(1);
+                else
+                    console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
         // Person --------------------------------------------------------------------
 
         {
@@ -292,6 +346,14 @@
                         <h2 class="fw-bolder">Seasons:</h2>
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="seasons"></div>
                     </div>
+                </div>
+            </div>
+        </section>
+        <!-- episodes section-->
+        <section class="py-5 episodeS" id="episodes_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="episodes"></div>
                 </div>
             </div>
         </section>
