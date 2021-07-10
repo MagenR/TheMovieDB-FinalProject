@@ -24,7 +24,6 @@ namespace TheMovieDB.Controllers
             return "value";
         }
         */
-
         // POST api/Preferences
         public HttpResponseMessage Post([FromBody] Preference p)
         {
@@ -32,7 +31,6 @@ namespace TheMovieDB.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Cannot add the episode to the current user's preferences.");
             return Request.CreateResponse(HttpStatusCode.OK, "Episode was succesfully added to the user's preferences.");
         }
-
         /*
         // PUT api/<controller>/5
         public void Put(int id, [FromBody] string value)
@@ -44,7 +42,6 @@ namespace TheMovieDB.Controllers
         {
         }
         */
-
     } // End of class definition - PreferencesController.
 
 }

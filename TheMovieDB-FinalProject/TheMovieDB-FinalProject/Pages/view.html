@@ -1,131 +1,25 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="viewing user data" />
+    <meta name="author" content="Magen Rosenwasser, Shay Mautner" />
 
     <title>View series episodes</title>
 
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+
     <!-- CSS -->
-    <style type="text/css">
-
-        #ph > img {
-            margin: 5px;
-            padding: 5px;
-        }
-
-        #ph > .episode {
-            float: left;
-        }
-    </style>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" 
-          rel="stylesheet" 
-          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" 
-          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../CSS/view.css" />
 
     <!-- JQuerry -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-            crossorigin="anonymous">
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- AJAX -->
     <script src="../Scripts/ajaxCalls.js"></script>
-
-    <!-- Functions -->
-    <script>
-        $(document).ready(function () {
-            key = "d8484ecfbfb906740724a447b5d63b12";
-            url = "https://api.themoviedb.org/";
-            imagePath = "https://image.tmdb.org/t/p/w500";
-
-            loadSavedLogIn();
-            $("#showEpisodesBtn").click(getEpisodes);
-            $("#goToInsert").click(function () {
-                window.location.href = "../Pages/insert.html";
-            });
-
-        });
-
-        // ----------------------------------------- Series -------------------------------------------
-
-        {
-
-            // ----------------------------------------- GET ------------------------------------------
-
-            function getSeriesNames() {
-                let api = "../api/Series?user_id=" + logged_user.User_id;
-
-                ajaxCall("GET", api, "", getSeriesNamesSuccessCB, getSeriesNamesErrorCB);
-            }
-
-            function getSeriesNamesSuccessCB(seriesList) {
-                createSelect(seriesList);
-            }
-
-            function getSeriesNamesErrorCB(err) {
-                console.log(err);
-            }
-        }
-
-        // ----------------------------------------- Episodes -----------------------------------------
-
-        {
-            // ----------------------------------------- GET ------------------------------------------
-
-            function getEpisodes() {
-                let tv_id = $("#seriesSelect").val();
-                let api = "../api/Episodes?user_id=" + logged_user.User_id + "&tv_id=" + tv_id;
-                ajaxCall("GET", api, "", getEpisodesSuccessCB, getEpisodesErrorCB);
-            }
-
-            // GET Callback on success.
-            function getEpisodesSuccessCB(episodes) {
-                renderEpisodes(episodes);
-            }
-
-            // GET Callback on failure.
-            function getEpisodesErrorCB(err) {
-                console.log(err);
-            }
-        }
-
-        //--------------------------------------- Methods ---------------------------------------
-
-        function loadSavedLogIn() {
-            logged_user = JSON.parse(localStorage.getItem('user'));
-            if (logged_user != null)
-                getSeriesNames();
-        }
-
-        function createSelect(seriesList) {
-            for (let i = 0; i < seriesList.length; i++) {
-                $('#seriesSelect').append($("<option></option>").attr("value", seriesList[i].Tv_id).text(seriesList[i].Name));
-            }
-        }
-
-        function renderEpisodes(episodes) {
-            $("#ph").html("");
-            for (let i = 0; i < episodes.length; i++) {
-                let date = new Date(episodes[i].Air_date)
-                date = date.toLocaleDateString('he-IL');
-                $("#ph").append(
-                    '<div class="card episode me-2" style="width: 18rem;">' +
-                    '<img class="card-img-top" src="' + imagePath + episodes[i].Still_path + '"/>' +
-                    '<div class="card-body">' +
-                    '<h5 class="card-title">' + episodes[i].Name + '</h5>' +
-                    '<p class="card-text"> Season number: ' + episodes[i].Season_number +
-                    '<p> Episode number: ' + episodes[i].Episode_number +
-                    '<p> Air date: ' + date +
-                    '<p> Overview: <br>' + episodes[i].Overview + '</p>' +
-                    '</div>' +
-                    '</div>');
-            }
-
-        }
-
-    </script>
 
 </head>
 <body>
@@ -150,9 +44,10 @@
     </div>
 
     <!-- Bootstrap dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS Functions -->
+    <script src="../Scripts/view.js"></script>
 
 </body>
 </html>

@@ -22,6 +22,7 @@ namespace TheMovieDB.Models
         // Props ----------------------------------------------------------------------------------
 
         public int Tv_id { get => tv_id; set => tv_id = value; }
+        public int FavCount { get => favCount; set => favCount = value; }
         public DateTime First_air_date { get => first_air_date; set => first_air_date = value; }
         public string Name { get => name; set => name = value; }
         public string Origin_country { get => origin_country; set => origin_country = value; }
@@ -29,26 +30,10 @@ namespace TheMovieDB.Models
         public string Overview { get => overview; set => overview = value; }
         public string Poster_path { get => poster_path; set => poster_path = value; }
         public float Popularity { get => popularity; set => popularity = value; }
-        public int FavCount { get => favCount; set => favCount = value; }
 
         // Constructors ---------------------------------------------------------------------------
 
         public Series() { }
-        public Series(int tv_id,
-            //string first_air_date, 
-            DateTime first_air_date,
-            string name, string origin_country, string original_language, string overview, string poster_path, float popularity)
-        {
-            Tv_id = tv_id;
-            //First_air_date = Convert.ToDateTime(first_air_date);
-            First_air_date = first_air_date;
-            Name = name;
-            Origin_country = origin_country;
-            Original_language = original_language;
-            Overview = overview;
-            Poster_path = poster_path;
-            Popularity = popularity;
-        }
 
         //Methods ---------------------------------------------------------------------------------
 

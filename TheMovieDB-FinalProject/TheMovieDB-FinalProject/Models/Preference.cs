@@ -20,11 +20,6 @@ namespace TheMovieDB.Models
         // Constructors ---------------------------------------------------------------------------
 
         public Preference() { }
-        public Preference(User user, Episode episode)
-        {
-            UserPreference = user;
-            EpisodePreference = episode;
-        }
 
         // Methods --------------------------------------------------------------------------------
 

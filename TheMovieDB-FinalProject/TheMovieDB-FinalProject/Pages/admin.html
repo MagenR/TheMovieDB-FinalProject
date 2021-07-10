@@ -4,20 +4,33 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="description" content="Administrator page for viewing database tables." />
+    <meta name="author" content="Magen Rosenwasser, Shay Mautner" />
 
-    <title>Tables - SB Admin</title>
+    <title>The Movie DB - Admin</title>
 
+    <!-- Bootstrap CSS-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="../CSS/adminPage.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="../CSS/admin.css" />
+
+    <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css" />
+
+    <!-- DataTables responsive plug in css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
 
+    <!-- JQuerry -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- AJAX -->
     <script src="../Scripts/ajaxCalls.js"></script>
+
+    <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+
+    <!-- Sweet Alert-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </head>
@@ -25,7 +38,7 @@
 
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="adminPage.html">Admin Dashboard</a>
+        <a class="navbar-brand ps-3" href="admin.html">Admin Dashboard</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar-->
@@ -45,15 +58,15 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Tables</div>
-                        <a class="nav-link" id="getUserList" href="adminPage.html?category=users">
+                        <a class="nav-link" id="getUserList" href="admin.html?category=users">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Users
                         </a>
-                        <a class="nav-link" id="getSeriesList" href="adminPage.html?category=series">
+                        <a class="nav-link" id="getSeriesList" href="admin.html?category=series">
                             <div class="sb-nav-link-icon"><i class="fas fa-tv"></i></div>
                             Series
                         </a>
-                        <a class="nav-link" id="getEpisodesList" href="adminPage.html?category=episodes">
+                        <a class="nav-link" id="getEpisodesList" href="admin.html?category=episodes">
                             <div class="sb-nav-link-icon"><i class="fas fa-film"></i></div>
                             Episodes
                         </a>
@@ -99,13 +112,24 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables dependancies -->
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- DataTables responsive plug in -->
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+    <!-- DataTables time render plug in -->
     <script src="https://cdn.datatables.net/plug-ins/1.10.25/dataRender/datetime.js"></script>
+
+    <!-- Moment JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="../Scripts/adminPage.js"></script>
+
+    <!-- JS Functions -->
+    <script src="../Scripts/admin.js"></script>
 
 </body>
 </html>

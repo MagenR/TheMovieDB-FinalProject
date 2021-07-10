@@ -1,0 +1,29 @@
+﻿body {
+}
+
+#ph > img {
+    margin: 5px;
+    padding: 5px;
+}
+
+#ph > .season,
+#ph > .episode {
+    float: left;
+}
+
+#ph > .season {
+    height: 300px;
+}
+
+.season:hover {
+    background-color: darkgrey !important;
+    cursor: pointer;
+}
+
+.season:active {
+    background-color: grey !important;
+}
+
+.red-star {
+    color: red;
+}

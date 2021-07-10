@@ -1,0 +1,11 @@
+﻿body {
+}
+
+#ph > img {
+    margin: 5px;
+    padding: 5px;
+}
+
+#ph > .episode {
+    float: left;
+}

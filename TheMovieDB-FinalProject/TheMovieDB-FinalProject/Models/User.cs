@@ -33,19 +33,6 @@ namespace TheMovieDB.Models
         // Constructors ---------------------------------------------------------------------------
 
         public User() { }
-        public User(int user_id, string email, string first_name, string last_name, string password, string phone_num, string address, string fav_genre, char gender, DateTime birth_date)
-        {
-            Gender = gender;
-            User_id = user_id;
-            Email = email;
-            First_name = first_name;
-            Last_name = last_name;
-            Password = password;
-            Phone_num = phone_num;
-            Address = address;
-            Fav_genre = fav_genre;
-            Birth_date = birth_date;
-        }
 
         // Methods --------------------------------------------------------------------------------
 

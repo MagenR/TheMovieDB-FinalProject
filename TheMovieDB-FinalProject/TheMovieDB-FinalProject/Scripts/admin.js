@@ -17,12 +17,15 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
+// ---------------------------------------- Constroller functions--------------------------
+
 $(document).ready(function () {
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var urlParam = urlParams.get('category');
-
+    var urlParam = 'users'; // Set Default param to users.
+    urlParam= urlParams.get('category');
+    renderText(urlParam);
     if (urlParam == 'episodes')
          getEpisodes();  
     else if (urlParam == 'series')
@@ -246,4 +249,36 @@ function renderEpisodes(episodes) {
     catch (err) {
         alert(err);
     }
+}
+
+// ---------------------------------------------- Dynamic text input ----------------------------------------------
+
+function renderText(choice){
+
+    var LoggedInName;
+    var MainHeading;
+    var MainText;
+    var TableName;
+
+    switch (choice) {
+        case 'series':
+            MainHeading = 'Series Data Base';
+            MainText = 'All favourited series data and their count.';
+            TableName = 'Series';
+            break;
+        case 'episodes':
+            MainHeading = 'Episodes Data Base';
+            MainText = 'All favourited episodes by series data and their count.';
+            TableName = 'Episodes';
+            break;
+        case 'users':
+        default:
+            MainHeading = 'Users Data Base';
+            MainText = 'All registered user data.';
+            TableName = 'Users';
+    }
+
+    $('#MainHeading').html(MainHeading);
+    $('#MainText').html(MainText);
+    $('#TableName').html('<i class="fas fa-table me-1"></i>' + TableName);
 }

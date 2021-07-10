@@ -18,30 +18,18 @@ namespace TheMovieDB.Models
         // Props ----------------------------------------------------------------------------------
 
         public string Episode_name { get => episode_name; set => episode_name = value; }
+        public string Series_name { get => series_name; set => series_name = value; }
         public string Still_path { get => still_path; set => still_path = value; }
         public string Overview { get => overview; set => overview = value; }
         public int Tv_id { get => tv_id; set => tv_id = value; }
         public int Season_number { get => season_number; set => season_number = value; }
         public int Episode_number { get => episode_number; set => episode_number = value; }
-        public DateTime Air_date { get => air_date; set => air_date = value; }
         public int FavCount { get => favCount; set => favCount = value; }
-        public string Series_name { get => series_name; set => series_name = value; }
+        public DateTime Air_date { get => air_date; set => air_date = value; }
 
         //Constructors ----------------------------------------------------------------------------
 
         public Episode() { }
-        public Episode(string name, string still_path, string overview,
-            int tv_id, int season_number, int episode_number,
-            string air_date)
-        {
-            Tv_id = tv_id;
-            Season_number = season_number;
-            Episode_number = episode_number;
-            Episode_name = name;
-            Still_path = still_path;
-            Overview = overview;
-            Air_date = Convert.ToDateTime(air_date);
-        }
 
         //Methods ---------------------------------------------------------------------------------
 

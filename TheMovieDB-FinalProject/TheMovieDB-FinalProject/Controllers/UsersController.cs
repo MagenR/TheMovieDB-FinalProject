@@ -60,8 +60,6 @@ namespace TheMovieDB.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
             }
         }
-
-        //------------------------------Unused------------------------------
         /*
         // PUT api/<controller>/5
         public void Put(int id, [FromBody] string value)
