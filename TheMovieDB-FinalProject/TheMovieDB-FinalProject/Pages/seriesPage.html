@@ -41,6 +41,12 @@
             margin: 5px;
             padding: 5px;
         }
+
+        #backdrop_path > img {
+            padding-top:50px;
+            height: 500px;
+        }
+
     </style>
     <!-- JQuerry -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -68,10 +74,12 @@
 
         function renderSeries() {
             series = JSON.parse(window.localStorage.getItem('series'));
+            $('#header_section').css('background', 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6) ), url(' + imagePath + series.backdrop_path + ')');
+            $('#header_section').css('background-size', 'cover');
             $('#navbarSeries').append(series.name);
             $('#header').append(series.name + "<br>");
             $('#overview').append(series.overview);
-            $('#backdrop_path').append("<img class='img-fluid rounded-3 my-5' src='" + imagePath + series.backdrop_path + "'/>");
+            $('#backdrop_path').append("<img class='img-fluid rounded-3 my-5' src='" + imagePath + series.poster_path + "'/>");
             $('#vote_average').append(series.vote_average);
             $('#origin_country').append(series.origin_country);
             $('#original_language').append(series.original_language);
@@ -170,7 +178,7 @@
             similarTv = similar.results;
             for (let i = 0; i < similarTv.length; i++) {
                 $("#Recommendations").append('<div class="card"> <img class="similarTv" src="' + imagePath + similarTv[i].poster_path +
-                    '"/><br><p class= "small text-muted">' + similarTv[i].name + '</p><p class= "small text-muted">' + (similarTv[i].vote_average)*10 +'%</p></div>');
+                    '"/><br><p class= "small text-muted">' + similarTv[i].name + '</p><p class= "small text-muted">' + (similarTv[i].vote_average) * 10 + '%</p></div>');
             }
         }
 
@@ -182,29 +190,29 @@
 <body class="d-flex flex-column">
     <main class="flex-shrink-0">
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
             <div class="container px-5">
                 <a class="navbar-brand" id="navbarSeries" href="index.html"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#cast">Cast</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#seasons">Seasons</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#videos">Videos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#reviewsTable">Reviews</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#Recommendations">Recommendations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#cast_section">Cast</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#seasons_section">Seasons</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#videos_section">Videos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reviews_section">Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#similarTv_section">Recommendations</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
         <!-- header-->
-        <header class="bg-dark py-5">
+        <header id="header_section">
             <div class="container px-5">
                 <div class="row gx-5 align-items-center justify-content-center">
                     <div class="col-lg-8 col-xl-7 col-xxl-6">
                         <div class="my-5 text-center text-xl-start">
                             <h1 class="display-5 fw-bolder text-white mb-2" id="header"></h1>
-                            <p class="lead fw-normal text-white-50 mb-4" id="overview"></p>
+                            <p class="lead fw-normal text-white mb-4" id="overview"></p>
                         </div>
                     </div>
                     <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" id="backdrop_path"></div>
@@ -212,7 +220,7 @@
             </div>
         </header>
         <!-- cast section-->
-        <section class="py-5 bg-light">
+        <section class="py-5 bg-light" id="cast_section">
             <div class="container px-5 my-5">
                 <div class="row gx-5">
                     <div class="col-xl-8">
@@ -224,7 +232,7 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <div class="card border-0 h-100">
+                        <div class="card border-0">
                             <div class="card-body p-4">
                                 <div class="d-flex h-100 align-items-center justify-content-center">
                                     <div class="text-center">
@@ -253,8 +261,8 @@
                 </div>
             </div>
         </section>
-        <!-- season section-->
-        <section class="py-5">
+        <!-- seasons section-->
+        <section class="py-5" id="seasons_section">
             <div class="container px-5 my-5">
                 <div class="scrolling-wrapper">
                     <div class="text-center">
@@ -265,7 +273,7 @@
             </div>
         </section>
         <!-- videos section-->
-        <section class="py-5 bg-light">
+        <section class="py-5 bg-light" id="videos_section">
             <div class="container px-5 my-5">
                 <div class="scrolling-wrapper">
                     <div class="text-center">
@@ -276,22 +284,25 @@
             </div>
         </section>
         <!-- reviews section-->
-        <section class="py-5">
+        <section class="py-5" id="reviews_section">
             <div class="container px-5 my-5">
-                <table id="reviewsTable" class="table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Content</th>
-                            <th>Created at</th>
-                            <th>Updated at</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="text-center">
+                    <h2 class="fw-bolder">Reviews:</h2>
+                    <table id="reviewsTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Content</th>
+                                <th>Created at</th>
+                                <th>Updated at</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </section>
         <!-- similar Tv section-->
-        <section class="py-5 bg-light">
+        <section class="py-5 bg-light" id="similarTv_section">
             <div class="container px-5 my-5">
                 <div class="scrolling-wrapper">
                     <div class="text-center">
