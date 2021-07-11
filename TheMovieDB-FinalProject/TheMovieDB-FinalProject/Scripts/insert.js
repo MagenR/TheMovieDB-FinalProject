@@ -1,11 +1,13 @@
 ﻿
-// ---------------------------------------- Constroller functions--------------------------
+// ---------------------------------------- Constroller functions----------------------------------
 
 $(document).ready(function () {
     $("#getTV").click(getTV);
     $("#getEps").click(function () {
         window.location.href = "../Pages/view.html";
     });
+
+    $('#searchTvBtn').click(getSearchResults);
 
     $('#ph').on('click', '.season', function () {
         getSeason($(this).attr('data-seasonNum'));
@@ -34,12 +36,18 @@ $(document).ready(function () {
     key = "d8484ecfbfb906740724a447b5d63b12";
     url = "https://api.themoviedb.org/";
     imagePath = "https://image.tmdb.org/t/p/w500";
+    maxResults = 6;
+
+    getTrending();
+    getOnAir();
+    getPopular();
+    getopRated();
 });
 
-// ---------------------------------------- API calls -------------------------------------
+// ---------------------------------------- API calls ---------------------------------------------
 {
 
-    // Users ------------------------------------------------------------------------------
+    // Users --------------------------------------------------------------------------------------
 
     {
 
@@ -95,7 +103,7 @@ $(document).ready(function () {
         }
     }
 
-    // Series -----------------------------------------------------------------------------
+    // Series -------------------------------------------------------------------------------------
 
     {
 
@@ -153,7 +161,7 @@ $(document).ready(function () {
         }
     }
 
-    // Seasons ----------------------------------------------------------------------------
+    // Seasons ------------------------------------------------------------------------------------
 
     {
 
@@ -177,7 +185,7 @@ $(document).ready(function () {
         }
     }
 
-    // Season episodes --------------------------------------------------------------------
+    // Season episodes ----------------------------------------------------------------------------
 
     {
 
@@ -201,7 +209,7 @@ $(document).ready(function () {
         }
     }
 
-    // Episode ----------------------------------------------------------------------------
+    // Episode ------------------------------------------------------------------------------------
 
     {
 
@@ -235,7 +243,7 @@ $(document).ready(function () {
         }
     }
 
-    // Preference -------------------------------------------------------------------------
+    // Preference ---------------------------------------------------------------------------------
 
     {
 
@@ -264,9 +272,117 @@ $(document).ready(function () {
 
     }
 
+    // Trending -----------------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getTrending() {
+            let apiCall = url + "3/trending/tv/week?api_key=" + key + "&page=1";
+            ajaxCall("GET", apiCall, "", getTrendingSuccessCB, getTrendingErrorCB)
+        }
+
+        function getTrendingSuccessCB(trending) {
+            renderPosters("#ph .trending", trending, maxResults)
+        }
+
+        function getTrendingErrorCB(err) {
+            console.log("Error Status: " + err.status + " Message: " + err.Message);
+        }
+
+    }
+
+    // On Air -------------------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getOnAir() {
+            let apiCall = url + "3/tv/on_the_air?api_key=" + key + "&page=1";
+            ajaxCall("GET", apiCall, "", getOnAirSuccessCB, getOnAirErrorCB)
+        }
+
+        function getOnAirSuccessCB(onAir) {
+            renderPosters("#ph .onAir", onAir, maxResults)
+        }
+
+        function getOnAirErrorCB(err) {
+            console.log("Error Status: " + err.status + " Message: " + err.Message);
+        }
+
+    }
+
+    // Popular ------------------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getPopular() {
+            let apiCall = url + "3/tv/popular?api_key=" + key + "&page=1";
+            ajaxCall("GET", apiCall, "", getPopularSuccessCB, getPopularErrorCB)
+        }
+
+        function getPopularSuccessCB(popular) {
+            renderPosters("#ph .popular", popular, maxResults)
+        }
+
+        function getPopularErrorCB(err) {
+            console.log("Error Status: " + err.status + " Message: " + err.Message);
+        }
+
+    }
+
+    // Top Rated ----------------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getopRated() {
+            let apiCall = url + "3/tv/top_rated?api_key=" + key + "&page=1";
+            ajaxCall("GET", apiCall, "", getopRatedSuccessCB, getopRatedErrorCB)
+        }
+
+        function getopRatedSuccessCB(topRated) {
+            renderPosters("#ph .topRated", topRated, maxResults)
+        }
+
+        function getopRatedErrorCB(err) {
+            console.log("Error Status: " + err.status + " Message: " + err.Message);
+        }
+
+    }
+
+    // user Search --------------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getSearchResults() {
+            var search = $('#searchBox').val()
+            let apiCall = url + "3/search/tv?api_key=" + key + "&query=" + search;
+            ajaxCall("GET", apiCall, "", getSearchResultsSuccessCB, getSearchResultsErrorCB)
+        }
+
+        function getSearchResultsSuccessCB(SearchResults) {          
+            $('#ph').html('<div class="row search"></div>');
+            $('#ph .search').append("<h4>Search Results</h4>");
+            renderPosters("#ph .search", SearchResults, SearchResults.results.length);
+        }
+
+        function getSearchResultsErrorCB(err) {
+            console.log("Error Status: " + err.status + " Message: " + err.Message);
+        }
+
+    }
+
 }
 
-// ---------------------------------------- Functions -------------------------------------
+// ---------------------------------------- Functions ---------------------------------------------
 
 {
 
@@ -285,6 +401,8 @@ $(document).ready(function () {
         today = yyyy + '-' + mm + '-' + dd;
         document.getElementById("birthYearTB").setAttribute("max", today);
     }
+
+    // ---------------------------------------- Renders -------------------------------------
 
     function renderSeasonsList(tv) {
         $("#ph").html("");
@@ -327,7 +445,16 @@ $(document).ready(function () {
         getSeasons(tv.id);
     }
 
-    // User commands
+    function renderPosters(location, source, totShow) {
+        for (let i = 0; i < totShow; i++) {
+            $(location).append('<div class="col-4 col-md-2 py-2 tvPoster"><img class="img-fluid popular rounded shadow" src="'
+                + imagePath + source.results[i].poster_path + '" data-seriesId="'
+                + source.results[i].id + '"/>' + '<h5>'
+                + source.results[i].name + '<h5>' + '</div>');
+        }
+    }
+
+    // ---------------------------------------- User commands ----------------------------------------
 
     function validatePassword() {
 
@@ -383,7 +510,7 @@ $(document).ready(function () {
 
     function logOut() {
         $("#logOutBtn").hide();
-        $("#WlcmMsg").html("The Movie DB Project");
+        $("#WlcmMsg").html("");
         $("#signUpBtn").show();
         $("#logInBtn").show();
         $('#getTV').prop("disabled", true);
@@ -391,6 +518,7 @@ $(document).ready(function () {
         $('#tvShowName').val('');
         $('#tvShowName').prop("disabled", true);
         localStorage.clear();
-        $('#ph').empty();
+        location.reload();
     }
+
 }
