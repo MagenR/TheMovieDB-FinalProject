@@ -1,61 +1,41 @@
-﻿
-// ---------------------------------------- Constroller functions----------------------------------
+﻿// global vars ------------------------------------------------------------------------------------
+
+key = "d8484ecfbfb906740724a447b5d63b12";
+url = "https://api.themoviedb.org/";
+imagePath = "https://image.tmdb.org/t/p/w500";
+maxResults = 6;
+
+// ---------------------------------------- Controller functions-----------------------------------
 
 $(document).ready(function () {
-    $("#getTV").click(getTV);
-    $("#getEps").click(function () {
-        window.location.href = "../Pages/view.html";
-    });
 
     $('#searchTvBtn').click(getSearchResults);
-
-    $('#ph').on('click', '.season', function () {
-        getSeason($(this).attr('data-seasonNum'));
-    });
-
-    $('#ph').on('click', '.episode-btn', function () {
-        episodeToAdd = parseInt($(this).attr('data-episodeNum'));
-        postSeries();
-    });
-
-    $('#logInModal').on('click', '#accessUserBtn', function () {
-        getUser();
-    });
-
+    $('#accessUserBtn').click(getUser);
+    $('#logOutBtn').click(logOut);
     $('#signUpModal').submit(signUp);
-
-    $('.navbar').on('click', '#logOutBtn', function () {
-        logOut();
-    });
-
     $("#passwordTB").on("blur", validatePassword);
-    loadSavedLogIn();
+
     setMaxDate();
-
-
-    key = "d8484ecfbfb906740724a447b5d63b12";
-    url = "https://api.themoviedb.org/";
-    imagePath = "https://image.tmdb.org/t/p/w500";
-    maxResults = 6;
-
+    loadSavedLogIn();
     getTrending();
     getOnAir();
     getPopular();
     getopRated();
+
 });
 
 // ---------------------------------------- API calls ---------------------------------------------
+
 {
 
-    // Users --------------------------------------------------------------------------------------
+    // Users ---------------------------------------------------------------------------------
 
     {
 
-        //--------------------------------------- GET ---------------------------------------
+        //--------------------------------------- GET -------------------------------------
 
         function getUser() {
             let api = "../api/Users?email=" + $('#emailLogInTB').val() + "&password=" + $('#passwordLogInTB').val();
-
             ajaxCall("GET", api, "", getUserSuccessCB, getUserErrorCB);
         }
 
@@ -71,7 +51,7 @@ $(document).ready(function () {
                 swal("Error!", err.responseJSON.Message, "error");
         }
 
-        //--------------------------------------- POST --------------------------------------
+        //--------------------------------------- POST ------------------------------------
 
         function postUser() {
 
@@ -88,7 +68,6 @@ $(document).ready(function () {
             }
 
             let api = "../api/Users";
-
             ajaxCall("POST", api, JSON.stringify(user), postUserSuccessCB, postUserErrorCB);
         }
 
@@ -101,178 +80,10 @@ $(document).ready(function () {
             console.log(err.status + " " + err.responseJSON.Message);
             swal("Error!", err.responseJSON.Message, "error");
         }
-    }
 
-    // Series -------------------------------------------------------------------------------------
+    } // End of 'Users.
 
-    {
-
-        //--------------------------------------- GET ---------------------------------------
-
-        function getTV() {
-            let name = $("#tvShowName").val();
-            let method = "3/search/tv?";
-            let api_key = "api_key=" + key;
-            let moreParams = "&language=en-US&page=1&include_adult=false&";
-            let query = "query=" + encodeURIComponent(name);
-            let apiCall = url + method + api_key + moreParams + query;
-
-            ajaxCall("GET", apiCall, "", getTVSuccessCB, getTVErrorCB);
-        }
-
-        function getTVSuccessCB(tv) {
-            series = tv.results[0];
-            tvId = series.id;
-            renderTV(series);
-        }
-
-        function getTVErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-        }
-
-        //--------------------------------------- POST --------------------------------------
-
-        function postSeries() {
-
-            tv_series = {
-                tv_id: series.id,
-                first_air_date: series.first_air_date,
-                name: series.name,
-                origin_country: series.origin_country[0],
-                original_language: series.original_language,
-                overview: series.overview,
-                popularity: series.popularity,
-                poster_path: series.poster_path
-            }
-
-            let api = "../api/Series";
-
-            ajaxCall("POST", api, JSON.stringify(tv_series), postSeriesSuccessCB, postSeriesErrorCB);
-        }
-
-        function postSeriesSuccessCB(msg) {
-            console.log(msg);
-            postEpisode(episodeToAdd);
-        }
-
-        function postSeriesErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-            postEpisode(episodeToAdd);
-        }
-    }
-
-    // Seasons ------------------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- GET -------------------------------------
-
-        function getSeasons() {
-
-            let method = "3/tv/";
-            let api_key = "api_key=" + key;
-            let apiCall = url + method + tvId + "?" + api_key;
-
-            ajaxCall("GET", apiCall, "", getSeasonsSuccessCB, getSeasonsErrorCB);
-        }
-
-        function getSeasonsSuccessCB(seasons) {
-            renderSeasonsList(seasons);
-        }
-
-        function getSeasonsErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-        }
-    }
-
-    // Season episodes ----------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- GET -------------------------------------
-
-        function getSeason(seasonNum) {
-            let apiCall = url + "3/tv/" + tvId + "/season/" + seasonNum + "?" + "api_key=" + key;
-            seasonNumber = seasonNum;
-            ajaxCall("GET", apiCall, "", getSeasonSuccessCB, getSeasonErrorCB)
-        }
-
-        function getSeasonSuccessCB(episodes) {
-            renderEpisodes(episodes);
-        }
-
-        function getSeasonErrorCB(err) {
-            if (seasonNumber == 0)
-                getSeason(1);
-            else
-                console.log(err.status + " " + err.responseJSON.Message);
-        }
-    }
-
-    // Episode ------------------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- POST ------------------------------------
-
-        function postEpisode(epNum) {
-
-            episode = {
-                Tv_id: tvId,
-                Season_number: episodes[epNum].season_number,
-                Episode_number: episodes[epNum].episode_number,
-                Name: episodes[epNum].name,
-                Still_path: episodes[epNum].still_path,
-                Overview: episodes[epNum].overview,
-                Air_date: episodes[epNum].air_date
-            }
-
-            let api = "../api/Episodes";
-
-            ajaxCall("POST", api, JSON.stringify(episode), postEpisodeSuccessCB, postEpisodeErrorCB);
-        }
-
-        function postEpisodeSuccessCB(msg) {
-            console.log(msg);
-            postPreference();
-        }
-
-        function postEpisodeErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-            postPreference();
-        }
-    }
-
-    // Preference ---------------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- POST ------------------------------------
-
-        function postPreference() {
-
-            let preference = {
-                UserPreference: logged_user,
-                EpisodePreference: episode
-            }
-
-            let api = "../api/Preferences";
-
-            ajaxCall("POST", api, JSON.stringify(preference), postPreferenceSuccessCB, postPreferenceErrorCB);
-        }
-
-
-        function postPreferenceSuccessCB(msg) {
-            console.log(msg);
-        }
-
-        function postPreferenceErrorCB(err) {
-            console.log(err.status + " " + err.responseJSON.Message);
-        }
-
-    }
-
-    // Trending -----------------------------------------------------------------------------------
+    // Trending ------------------------------------------------------------------------------
 
     {
 
@@ -280,20 +91,16 @@ $(document).ready(function () {
 
         function getTrending() {
             let apiCall = url + "3/trending/tv/week?api_key=" + key + "&page=1";
-            ajaxCall("GET", apiCall, "", getTrendingSuccessCB, getTrendingErrorCB)
+            ajaxCall("GET", apiCall, "", getTrendingSuccessCB, getErrorCB)
         }
 
         function getTrendingSuccessCB(trending) {
             renderPosters("#ph .trending", trending, maxResults)
         }
 
-        function getTrendingErrorCB(err) {
-            console.log("Error Status: " + err.status + " Message: " + err.Message);
-        }
+    } // End of 'Trending.
 
-    }
-
-    // On Air -------------------------------------------------------------------------------------
+    // On Air --------------------------------------------------------------------------------
 
     {
 
@@ -301,20 +108,16 @@ $(document).ready(function () {
 
         function getOnAir() {
             let apiCall = url + "3/tv/on_the_air?api_key=" + key + "&page=1";
-            ajaxCall("GET", apiCall, "", getOnAirSuccessCB, getOnAirErrorCB)
+            ajaxCall("GET", apiCall, "", getOnAirSuccessCB, getErrorCB)
         }
 
         function getOnAirSuccessCB(onAir) {
             renderPosters("#ph .onAir", onAir, maxResults)
         }
 
-        function getOnAirErrorCB(err) {
-            console.log("Error Status: " + err.status + " Message: " + err.Message);
-        }
+    } // End of 'On Air'.
 
-    }
-
-    // Popular ------------------------------------------------------------------------------------
+    // Popular -------------------------------------------------------------------------------
 
     {
 
@@ -322,20 +125,16 @@ $(document).ready(function () {
 
         function getPopular() {
             let apiCall = url + "3/tv/popular?api_key=" + key + "&page=1";
-            ajaxCall("GET", apiCall, "", getPopularSuccessCB, getPopularErrorCB)
+            ajaxCall("GET", apiCall, "", getPopularSuccessCB, getErrorCB)
         }
 
         function getPopularSuccessCB(popular) {
             renderPosters("#ph .popular", popular, maxResults)
         }
 
-        function getPopularErrorCB(err) {
-            console.log("Error Status: " + err.status + " Message: " + err.Message);
-        }
+    } // End of 'Popular'.
 
-    }
-
-    // Top Rated ----------------------------------------------------------------------------------
+    // Top Rated -----------------------------------------------------------------------------
 
     {
 
@@ -343,44 +142,42 @@ $(document).ready(function () {
 
         function getopRated() {
             let apiCall = url + "3/tv/top_rated?api_key=" + key + "&page=1";
-            ajaxCall("GET", apiCall, "", getopRatedSuccessCB, getopRatedErrorCB)
+            ajaxCall("GET", apiCall, "", getopRatedSuccessCB, getErrorCB)
         }
 
         function getopRatedSuccessCB(topRated) {
             renderPosters("#ph .topRated", topRated, maxResults)
         }
 
-        function getopRatedErrorCB(err) {
-            console.log("Error Status: " + err.status + " Message: " + err.Message);
-        }
+    } // End of 'Top Rated'.
 
-    }
-
-    // user Search --------------------------------------------------------------------------------
+    // User Search ---------------------------------------------------------------------------
 
     {
 
         //--------------------------------------- GET -------------------------------------
 
         function getSearchResults() {
-            var search = $('#searchBox').val()
+            let search = $('#searchBox').val()
             let apiCall = url + "3/search/tv?api_key=" + key + "&query=" + search;
-            ajaxCall("GET", apiCall, "", getSearchResultsSuccessCB, getSearchResultsErrorCB)
+            ajaxCall("GET", apiCall, "", getSearchResultsSuccessCB, getErrorCB)
         }
 
-        function getSearchResultsSuccessCB(SearchResults) {          
+        function getSearchResultsSuccessCB(SearchResults) {
             $('#ph').html('<div class="row search"></div>');
             $('#ph .search').append("<h4>Search Results</h4>");
             renderPosters("#ph .search", SearchResults, SearchResults.results.length);
         }
 
-        function getSearchResultsErrorCB(err) {
-            console.log("Error Status: " + err.status + " Message: " + err.Message);
-        }
+    } // End of 'User Search'.
 
+    // Error call back -----------------------------------------------------------------------
+
+    function getErrorCB(err) {
+        console.log("Error Status: " + err.status + " Message: " + err.Message);
     }
 
-}
+} // End of 'API calls'.
 
 // ---------------------------------------- Functions ---------------------------------------------
 
@@ -402,59 +199,30 @@ $(document).ready(function () {
         document.getElementById("birthYearTB").setAttribute("max", today);
     }
 
-    // ---------------------------------------- Renders -------------------------------------
-
-    function renderSeasonsList(tv) {
-        $("#ph").html("");
-        seasons = tv.seasons;
-        for (let i = 0; i < seasons.length; i++) {
-            $("#ph").append('<img class="season" src="' + imagePath + seasons[i].poster_path + '" data-seasonNum="' + i + '"/>');
-        }
-    }
-
-    function renderEpisodes(season) {
-        $("#ph").html("");
-        episodes = season.episodes;
-        for (let i = 0; i < episodes.length; i++) {
-
-            $("#ph").append(
-                '<div class="card episode me-2" style="width: 18rem;">' +
-                '<img class="card-img-top" src="' + imagePath + episodes[i].still_path + '"/>' +
-                '<div class="card-body">' +
-                '<h5 class="card-title">' + episodes[i].name + '</h5>' +
-                '<p class="card-text">' + episodes[i].overview + '</p>' +
-                '<p> air date: ' + episodes[i].air_date + '</p>' +
-                '<button type="button" class="episode-btn" data-episodeNum="' + i + '">Add this episode</button>' +
-                '</div>' +
-                '</div>'
-            );
-
-        }
-    }
-
-    function renderTV(tv) {
-        $("#series_page").html("");
-        $("#series_page").append(
-            "<img src='" + imagePath + tv.poster_path + "'/>" +
-            "<h2>" + tv.name + "</h2>" +
-            "<p> Vote average: " + tv.vote_average + "<p>" +
-            "<p> Origin country: " + tv.origin_country + "<p>" +
-            "<p> Original language: " + tv.original_language + "<p>" +
-            "<p> Original name: " + tv.original_name + "<p>" +
-            "<p>" + tv.overview + "</p>");
-        getSeasons(tv.id);
-    }
+    // ---------------------------------------- Renders --------------------------------------
 
     function renderPosters(location, source, totShow) {
+
+        var posterPath = null;
+        var seriesID = null;
+        var seriesName = null;
+
         for (let i = 0; i < totShow; i++) {
+
+            posterPath = source.results[i].poster_path;
+            if (posterPath == null)
+                posterPath = '../Images/placeholder-vertical.jpg';
+            else
+                posterPath = imagePath + posterPath;
+
             $(location).append('<div class="col-4 col-md-2 py-2 tvPoster"><img class="img-fluid popular rounded shadow" src="'
-                + imagePath + source.results[i].poster_path + '" data-seriesId="'
+                + posterPath + '" data-seriesId="'
                 + source.results[i].id + '"/>' + '<h5>'
                 + source.results[i].name + '<h5>' + '</div>');
         }
     }
 
-    // ---------------------------------------- User commands ----------------------------------------
+    // ---------------------------------------- User commands --------------------------------
 
     function validatePassword() {
 
@@ -502,23 +270,16 @@ $(document).ready(function () {
         $("#logOutBtn").show();
         $("#signUpBtn").hide();
         $("#logInBtn").hide();
-        $('#getTV').prop("disabled", false);
-        $('#getEps').prop("disabled", false);
-        $('#tvShowName').prop("disabled", false);
         $('#logInModal').modal('hide');
     }
 
     function logOut() {
-        $("#logOutBtn").hide();
         $("#WlcmMsg").html("");
+        $("#logOutBtn").hide();
         $("#signUpBtn").show();
         $("#logInBtn").show();
-        $('#getTV').prop("disabled", true);
-        $('#getEps').prop("disabled", true);
-        $('#tvShowName').val('');
-        $('#tvShowName').prop("disabled", true);
         localStorage.clear();
         location.reload();
     }
 
-}
+} // End of 'Functions'.
