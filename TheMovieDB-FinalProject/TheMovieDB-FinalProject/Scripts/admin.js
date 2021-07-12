@@ -273,7 +273,7 @@ function renderText(choice){
             MainHeading = 'Users Data Base';
             MainText = 'All registered user data.';
             TableName = 'Users';
-            getEpisodes();
+            getUsers();
     }
 
     $('#MainHeading').html(MainHeading);
