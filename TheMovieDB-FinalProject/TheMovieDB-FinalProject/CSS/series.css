@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+.scrolling-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.card {
+    display: inline-block;
+}
+
+    .card > img {
+        margin: 5px;
+        padding: 5px;
+        height: 300px;
+        float: left;
+    }
+
+    .card > p {
+        float: left;
+        margin: 5px;
+        padding: 5px;
+    }
+
+#videos > iframe {
+    margin: 5px;
+    padding: 5px;
+}
+
+#backdrop_path > img {
+    padding-top: 50px;
+    height: 400px;
+}
+
+.card-body {
+    width: 400px;
+    text-align: justify;
+}
+
+.season:hover {
+    background-color: darkgrey !important;
+    cursor: pointer;
+}
+
+.season:active {
+    background-color: grey !important;
+}
+
+#episodes_section {
+    visibility: hidden;
+}

@@ -18,6 +18,10 @@ $(document).ready(function () {
         $targetId = $(this).data('personid');
         window.location.href = "person.html?id=" + $targetId;
     });
+    $('#ph').on('click', '.tvPoster', function () {
+        $targetId = $(this).data('seriesid');
+        window.location.href = "series.html?id=" + $targetId;
+    });
     /*.tvPoster: hover,*/
 
     setMaxDate();
@@ -25,7 +29,6 @@ $(document).ready(function () {
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    urlParam = 'TV'; // Set Default param to users.
     urlParam = urlParams.get('category');
 
     if (urlParam == 'actors') {
@@ -40,6 +43,7 @@ $(document).ready(function () {
         getOnAir();
         getPopular();
         getopRated();
+        urlParam = 'tv'
         apiCallSearch = 'tv';
     }
 
@@ -206,7 +210,7 @@ $(document).ready(function () {
         function getSearchResultsSuccessCB(SearchResults) {
             $('#ph').html('<div class="row search"></div>');
             $('#ph .search').append("<h4>Search Results</h4>");
-            if (urlParam = 'actors')
+            if (urlParam == 'actors')
                 renderPeople("#ph .search", SearchResults, SearchResults.results.length);
             else
                 renderPosters("#ph .search", SearchResults, SearchResults.results.length);
@@ -258,10 +262,10 @@ $(document).ready(function () {
             else
                 posterPath = imagePath + posterPath;
 
-            $(location).append('<div class="col-4 col-md-2 py-2 tvPoster"><img class="img-fluid popular rounded shadow" src="'
-                + posterPath + '" data-seriesId="'
-                + source.results[i].id + '"/>' + '<h5>'
-                + source.results[i].name + '<h5>' + '</div>');
+            $(location).append('<div class="col-4 col-md-2 py-2 tvPoster" data-seriesid="' + source.results[i].id + '">'
+                + '<img class="img-fluid popular rounded shadow" src="' + posterPath + '"/>'
+                + '<h5>' + source.results[i].name + '<h5>'
+                + '</div>');
         }
     }
 

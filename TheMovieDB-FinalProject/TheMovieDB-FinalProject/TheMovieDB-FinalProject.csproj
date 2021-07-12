@@ -179,15 +179,18 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="CSS\admin.css" />
     <Content Include="CSS\main.css" />
+    <Content Include="CSS\series.css" />
     <Content Include="CSS\view.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\placeholder-vertical.jpg" />
     <Content Include="Pages\admin.html" />
+    <Content Include="Pages\insert.html" />
     <Content Include="Pages\main.html" />
     <Content Include="CSS\person.css" />
     <Content Include="Pages\person.html" />
+    <Content Include="Pages\series.html" />
     <Content Include="Pages\view.html" />
     <Content Include="Scripts\admin.js" />
     <Content Include="Scripts\ajaxCalls.js" />
@@ -220,6 +223,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\person.js" />
+    <Content Include="Scripts\series.js" />
     <Content Include="Scripts\view.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

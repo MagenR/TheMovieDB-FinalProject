@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Modern Business - Start Bootstrap Template</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link href="../CSS/series.css" rel="stylesheet" />
+
+    <!-- JQuerry -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- AJAX -->
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <!-- Data Tables -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+</head>
+<body class="d-flex flex-column">
+    <main class="flex-shrink-0">
+
+        <!-- Navigation-->
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <div class="container px-5">
+                <a class="navbar-brand" id="navbarSeries" href="index.html"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#cast_section">Cast</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#seasons_section">Seasons</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#videos_section">Videos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reviews_section">Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#similarTv_section">Recommendations</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- header-->
+        <header id="header_section">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center justify-content-center">
+                    <div class="col-lg-8 col-xl-7 col-xxl-6">
+                        <div class="my-5 text-center text-xl-start">
+                            <h1 class="display-5 fw-bolder text-white mb-2" id="header"></h1>
+                            <p class="lead fw-normal text-white mb-4" id="overview"></p>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" id="backdrop_path"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- cast section-->
+        <section class="py-5 bg-light" id="cast_section">
+            <div class="container px-5 my-5">
+                <div class="row gx-5">
+                    <div class="col-xl-8">
+                        <div class="scrolling-wrapper">
+                            <div class="text-center">
+                                <h2 class="fw-bolder">Cast:</h2>
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="cast"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <div class="d-flex h-100 align-items-center justify-content-center">
+                                    <div class="text-center">
+                                        <h2 class="fw-bolder fs-5 mb-4">Facts</h2>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Vote average:</div>
+                                            <p class="mb-0" id="vote_average"></p>
+                                        </div>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Origin country:</div>
+                                            <p class="mb-0" id="origin_country"></p>
+                                        </div>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Original language:</div>
+                                            <p class="mb-0" id="original_language"></p>
+                                        </div>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Original name:</div>
+                                            <p class="mb-0" id="original_name"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- seasons section-->
+        <section class="py-5" id="seasons_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">Seasons:</h2>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="seasons"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- episodes section-->
+        <section class="py-5 episodeS" id="episodes_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="episodes"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- videos section-->
+        <section class="py-5 bg-light" id="videos_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">Videos:</h2>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="videos"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- reviews section-->
+        <section class="py-5" id="reviews_section">
+            <div class="container px-5 my-5">
+                <div class="text-center">
+                    <h2 class="fw-bolder">Reviews:</h2>
+                    <table id="reviewsTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Content</th>
+                                <th>Created at</th>
+                                <th>Updated at</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- similar Tv section-->
+        <section class="py-5 bg-light" id="similarTv_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">Recommendations:</h2>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="Recommendations"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer-->
+    <footer class="bg-dark py-4 mt-auto">
+        <div class="container px-5">
+            <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                <div class="col-auto"><div class="small m-0 text-white">Copyright &copy; Your Website 2021</div></div>
+                <div class="col-auto">
+                    <a class="link-light small" href="#!">Privacy</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="#!">Terms</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="#!">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS Functions -->
+    <script src="../Scripts/series.js"></script>
+
+</body>
+</html>
