@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Modern Business - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="seriesPage.css" rel="stylesheet" />
+
+    <style>
+        .scrolling-wrapper {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+
+        .card {
+            display: inline-block;
+        }
+
+            .card > img {
+                margin: 5px;
+                padding: 5px;
+                height: 300px;
+                float: left;
+            }
+
+            .card > p {
+                float: left;
+                margin: 5px;
+                padding: 5px;
+            }
+
+        #videos > iframe {
+            margin: 5px;
+            padding: 5px;
+        }
+
+        #backdrop_path > img {
+            padding-top: 50px;
+            height: 400px;
+        }
+
+        .card-body {
+            width: 400px;
+            text-align: justify;
+        }
+
+        .season:hover {
+            background-color: darkgrey !important;
+            cursor: pointer;
+        }
+
+        .season:active {
+            background-color: grey !important;
+        }
+
+        #episodes_section{
+            visibility:hidden;
+        }
+
+    </style>
+    <!-- JQuerry -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous">
+    </script>
+
+    <!-- AJAX -->
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <!-- Data Tables -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            key = "d8484ecfbfb906740724a447b5d63b12";
+            url = "https://api.themoviedb.org/";
+            imagePath = "https://image.tmdb.org/t/p/w500";
+            youtubeUrl = "https://www.youtube.com/embed/";
+            renderSeries();
+
+            $('#seasons').on('click', '.season', function () {
+                getSeason($(this).attr('data-seasonNum'));
+            });
+        });
+
+
+        function renderSeries() {
+            series = JSON.parse(window.localStorage.getItem('series'));
+            $('#header_section').css('background', 'linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8) ), url(' + imagePath + series.backdrop_path + ')');
+            $('#header_section').css('background-size', 'cover');
+            $('#navbarSeries').append(series.name);
+            $('#header').append(series.name + "<br>");
+            $('#overview').append(series.overview);
+            $('#backdrop_path').append("<img class='img-fluid  rounded-3  my-5' src='" + imagePath + series.poster_path + "'/>");
+            $('#vote_average').append(series.vote_average);
+            $('#origin_country').append(series.origin_country);
+            $('#original_language').append(series.original_language);
+            $('#original_name').append(series.original_name);
+            renderSeasonsList();
+            renderCast();
+            getReviews();
+            getVideos();
+            getSimilarTv();
+        }
+
+        function renderSeasonsList() {
+            seasons = JSON.parse(window.localStorage.getItem('seasons'));
+            for (let i = 0; i < seasons.length; i++) {
+                $("#seasons").append('<div class="card"> <img class="season" src="' + imagePath + seasons[i].poster_path + '" data-seasonNum="' + (i + 1) + '"/></div>');
+            }
+        }
+
+        function renderCast() {
+            cast = JSON.parse(window.localStorage.getItem('cast'));
+            for (let i = 0; i < cast.length; i++) {
+                personId = cast[i].id
+                getPerson(personId);
+            }
+        }
+
+        function renderEpisodes(season) {
+            $('.episode').remove();
+            episodes = season.episodes;
+            $('#episodes_section').css('visibility', 'visible');
+            $("#episodes").append('<h2 class="fw-bolder episode">' + season.name + '</h2>');
+            for (let i = 0; i < episodes.length; i++) {
+                $("#episodes").append('<div class="card"> <img class="episode" src="' + imagePath + episodes[i].still_path +
+                    '"/><p class= "small text-left episode card-body">' + episodes[i].name + '<br>' + episodes[i].overview + '</p></div>');
+
+            }
+        }
+
+        // Season episodes --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+
+            function getSeason(seasonNum) {
+                let apiCall = url + "3/tv/" + series.id + "/season/" + seasonNum + "?" + "api_key=" + key;
+                ajaxCall("GET", apiCall, "", getSeasonSuccessCB, getSeasonErrorCB)
+            }
+
+            function getSeasonSuccessCB(episodes) {
+                renderEpisodes(episodes);
+            }
+
+            function getSeasonErrorCB(err) {
+                if (seasonNumber == 0)
+                    getSeason(1);
+                else
+                    console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
+        // Person --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getPerson() {
+                let apiCall = url + "3/person/" + personId + "?" + "api_key=" + key;
+
+                ajaxCall("GET", apiCall, "", getPersonSuccessCB, getPersonErrorCB);
+            }
+
+            function getPersonSuccessCB(person) {
+                $("#cast").append('<div class="card"> <img class="cast" src="' + imagePath + person.profile_path +
+                    '"/><p class= "small text-muted">' + person.name + '</p></div>');
+            }
+
+            function getPersonErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
+        // Reviews --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getReviews() {
+                let apiCall = url + "3/tv/" + series.id + "/reviews?" + "api_key=" + key;
+
+                ajaxCall("GET", apiCall, "", getReviewsSuccessCB, getReviewsErrorCB);
+            }
+
+            function getReviewsSuccessCB(reviews) {
+                reviewsList = reviews.results;
+
+                try {
+                    tbl = $('#reviewsTable').DataTable({
+                        data: reviewsList,
+                        pageLength: 5,
+                        columns: [
+                            { data: "author" },
+                            { data: "content" },
+                            { data: "created_at" },
+                            { data: "updated_at" },
+                        ],
+                    });
+                }
+                catch (err) {
+                    alert(err);
+                }
+            }
+
+            function getReviewsErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
+        // Videos --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getVideos() {
+                let apiCall = url + "3/tv/" + series.id + "/videos?" + "api_key=" + key;
+
+                ajaxCall("GET", apiCall, "", getVideosSuccessCB, getVideosErrorCB);
+            }
+
+            function getVideosSuccessCB(video) {
+                videos = video.results;
+                for (let i = 0; i < videos.length; i++) {
+                    $('#videos').append('<iframe width="400" height="300" src="' + youtubeUrl + videos[i].key + '"></iframe>');
+                }
+            }
+
+            function getVideosErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
+        // Similar Tv Shows --------------------------------------------------------------------
+
+        {
+            //--------------------------------------- GET -------------------------------------
+            function getSimilarTv() {
+                let apiCall = url + "3/tv/" + series.id + "/similar?" + "api_key=" + key;
+
+                ajaxCall("GET", apiCall, "", getSimilarSuccessCB, getSimilarErrorCB);
+            }
+
+            function getSimilarSuccessCB(similar) {
+                similarTv = similar.results;
+                for (let i = 0; i < similarTv.length; i++) {
+                    $("#Recommendations").append('<div class="card"> <img class="similarTv" src="' + imagePath + similarTv[i].poster_path +
+                        '"/><br><p class= "small text-muted">' + similarTv[i].name + '</p><p class= "small text-muted">' + (similarTv[i].vote_average) * 10 + '%</p></div>');
+                }
+            }
+
+            function getSimilarErrorCB(err) {
+                console.log(err.status + " " + err.responseJSON.Message);
+            }
+        }
+
+    </script>
+</head>
+<body class="d-flex flex-column">
+    <main class="flex-shrink-0">
+        <!-- Navigation-->
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <div class="container px-5">
+                <a class="navbar-brand" id="navbarSeries" href="index.html"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#cast_section">Cast</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#seasons_section">Seasons</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#videos_section">Videos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reviews_section">Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#similarTv_section">Recommendations</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- header-->
+        <header id="header_section">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center justify-content-center">
+                    <div class="col-lg-8 col-xl-7 col-xxl-6">
+                        <div class="my-5 text-center text-xl-start">
+                            <h1 class="display-5 fw-bolder text-white mb-2" id="header"></h1>
+                            <p class="lead fw-normal text-white mb-4" id="overview"></p>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" id="backdrop_path"></div>
+                </div>
+            </div>
+        </header>
+        <!-- cast section-->
+        <section class="py-5 bg-light" id="cast_section">
+            <div class="container px-5 my-5">
+                <div class="row gx-5">
+                    <div class="col-xl-8">
+                        <div class="scrolling-wrapper">
+                            <div class="text-center">
+                                <h2 class="fw-bolder">Cast:</h2>
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="cast"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <div class="d-flex h-100 align-items-center justify-content-center">
+                                    <div class="text-center">
+                                        <h2 class="fw-bolder fs-5 mb-4">Facts</h2>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Vote average:</div>
+                                            <p class="mb-0" id="vote_average"></p>
+                                        </div>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Origin country:</div>
+                                            <p class="mb-0" id="origin_country"></p>
+                                        </div>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Original language:</div>
+                                            <p class="mb-0" id="original_language"></p>
+                                        </div>
+                                        <div class="mb-5">
+                                            <div class="small text-muted">Original name:</div>
+                                            <p class="mb-0" id="original_name"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- seasons section-->
+        <section class="py-5" id="seasons_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">Seasons:</h2>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="seasons"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- episodes section-->
+        <section class="py-5 episodeS" id="episodes_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="episodes"></div>
+                </div>
+            </div>
+        </section>
+        <!-- videos section-->
+        <section class="py-5 bg-light" id="videos_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">Videos:</h2>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="videos"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- reviews section-->
+        <section class="py-5" id="reviews_section">
+            <div class="container px-5 my-5">
+                <div class="text-center">
+                    <h2 class="fw-bolder">Reviews:</h2>
+                    <table id="reviewsTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Content</th>
+                                <th>Created at</th>
+                                <th>Updated at</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <!-- similar Tv section-->
+        <section class="py-5 bg-light" id="similarTv_section">
+            <div class="container px-5 my-5">
+                <div class="scrolling-wrapper">
+                    <div class="text-center">
+                        <h2 class="fw-bolder">Recommendations:</h2>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="Recommendations"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer-->
+    <footer class="bg-dark py-4 mt-auto">
+        <div class="container px-5">
+            <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                <div class="col-auto"><div class="small m-0 text-white">Copyright &copy; Your Website 2021</div></div>
+                <div class="col-auto">
+                    <a class="link-light small" href="#!">Privacy</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="#!">Terms</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="#!">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
