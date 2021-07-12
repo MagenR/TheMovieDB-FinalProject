@@ -14,13 +14,34 @@ $(document).ready(function () {
     $('#logOutBtn').click(logOut);
     $('#signUpModal').submit(signUp);
     $("#passwordTB").on("blur", validatePassword);
+    $('#ph').on('click', '.personPicture', function () {
+        $targetId = $(this).data('personid');
+        window.location.href = "person.html?id=" + $targetId;
+    });
+    /*.tvPoster: hover,*/
 
     setMaxDate();
     loadSavedLogIn();
-    getTrending();
-    getOnAir();
-    getPopular();
-    getopRated();
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    urlParam = 'TV'; // Set Default param to users.
+    urlParam = urlParams.get('category');
+
+    if (urlParam == 'actors') {
+        $('#searchBox').attr('placeholder', 'Search for an actor.')
+        getActors();
+        apiCallSearch = 'person';
+        maxResults = 20;
+    }
+       
+    else {
+        getTrending();
+        getOnAir();
+        getPopular();
+        getopRated();
+        apiCallSearch = 'tv';
+    }
 
 });
 
@@ -95,7 +116,8 @@ $(document).ready(function () {
         }
 
         function getTrendingSuccessCB(trending) {
-            renderPosters("#ph .trending", trending, maxResults)
+            $('#ph').append('<div class="row trending"><h4>Trending this week</h4></div>');
+            renderPosters("#ph .trending", trending, maxResults);
         }
 
     } // End of 'Trending.
@@ -112,7 +134,8 @@ $(document).ready(function () {
         }
 
         function getOnAirSuccessCB(onAir) {
-            renderPosters("#ph .onAir", onAir, maxResults)
+            $('#ph').append('<div class="row onAir"><h4>On Air</h4></div>');
+            renderPosters("#ph .onAir", onAir, maxResults);
         }
 
     } // End of 'On Air'.
@@ -129,7 +152,8 @@ $(document).ready(function () {
         }
 
         function getPopularSuccessCB(popular) {
-            renderPosters("#ph .popular", popular, maxResults)
+            $('#ph').append('<div class="row popular"><h4>Popular</h4></div>');
+            renderPosters("#ph .popular", popular, maxResults);
         }
 
     } // End of 'Popular'.
@@ -146,10 +170,26 @@ $(document).ready(function () {
         }
 
         function getopRatedSuccessCB(topRated) {
+            $('#ph').append('<div class="row topRated"><h4>Top Rated</h4></div>');
             renderPosters("#ph .topRated", topRated, maxResults)
         }
 
     } // End of 'Top Rated'.
+
+    //  Actors/People ------------------------------------------------------------------------
+
+    {
+        function getActors() {
+            let apiCall = url + "3/person/popular?api_key=" + key + "&page=1";
+            ajaxCall("GET", apiCall, "", getPeopleSuccessCB, getErrorCB)
+        }
+
+        function getPeopleSuccessCB(popPeople) {
+            $('#ph').append('<div class="row popularPeople"><h4>Popular People</h4></div>');
+            renderPeople("#ph .popularPeople", popPeople, maxResults);
+        }
+
+    } // End of 'Actors/People'.
 
     // User Search ---------------------------------------------------------------------------
 
@@ -159,14 +199,17 @@ $(document).ready(function () {
 
         function getSearchResults() {
             let search = $('#searchBox').val()
-            let apiCall = url + "3/search/tv?api_key=" + key + "&query=" + search;
+            let apiCall = url + '3/search/' + apiCallSearch + '?api_key=' + key + '&query=' + search;
             ajaxCall("GET", apiCall, "", getSearchResultsSuccessCB, getErrorCB)
         }
 
         function getSearchResultsSuccessCB(SearchResults) {
             $('#ph').html('<div class="row search"></div>');
             $('#ph .search').append("<h4>Search Results</h4>");
-            renderPosters("#ph .search", SearchResults, SearchResults.results.length);
+            if (urlParam = 'actors')
+                renderPeople("#ph .search", SearchResults, SearchResults.results.length);
+            else
+                renderPosters("#ph .search", SearchResults, SearchResults.results.length);
         }
 
     } // End of 'User Search'.
@@ -219,6 +262,25 @@ $(document).ready(function () {
                 + posterPath + '" data-seriesId="'
                 + source.results[i].id + '"/>' + '<h5>'
                 + source.results[i].name + '<h5>' + '</div>');
+        }
+    }
+
+    function renderPeople(location, source, tot) {
+
+        var profilePath = null;
+
+        for (let i = 0; i < tot; i++) {
+
+            profilePath = source.results[i].profile_path;
+            if (profilePath == null)
+                profilePath = '../Images/placeholder-vertical.jpg';
+            else
+                profilePath = imagePath + profilePath;
+
+            $(location).append('<div class="col-4 col-md-2 py-2 personPicture" data-personid="' + source.results[i].id + '">'
+                + '<img class="img-fluid popular rounded shadow" src="' + profilePath + '"/>'
+                + '<h5>' + source.results[i].name + '<h5>'
+                + '</div>');
         }
     }
 

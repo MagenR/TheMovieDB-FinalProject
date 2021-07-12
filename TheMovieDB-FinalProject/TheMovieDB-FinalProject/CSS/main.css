@@ -23,6 +23,7 @@ footer,
 }
 
 .tvPoster:hover,
+.personPicture:hover,
 .season:hover {
     transform: scale(1.05);
     color: darkgrey !important;

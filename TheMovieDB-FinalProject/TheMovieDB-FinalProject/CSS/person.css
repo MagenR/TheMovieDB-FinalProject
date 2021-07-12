@@ -3,6 +3,25 @@
     background: #eee;
 }
 
+#personPic > img {
+    height: 300px;
+    width: 200px;
+    float: left;
+    padding-right: 15px;
+}
+
+.card {
+    display: inline-block;
+}
+
+#tab > img {
+    margin: 5px;
+    padding: 5px;
+    height: 200px;
+    width: 10rem;
+    float: left;
+}
+
 .fs35 {
     font-size: 35px !important;
 }

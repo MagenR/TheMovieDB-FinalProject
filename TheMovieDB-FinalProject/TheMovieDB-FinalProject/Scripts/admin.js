@@ -26,12 +26,7 @@ $(document).ready(function () {
     var urlParam = 'users'; // Set Default param to users.
     urlParam= urlParams.get('category');
     renderText(urlParam);
-    if (urlParam == 'episodes')
-         getEpisodes();  
-    else if (urlParam == 'series')
-        getSeries();
-    else
-        getUsers();
+
 });
 
 // ---------------------------------------------- Getters ----------------------------------------------
@@ -265,17 +260,20 @@ function renderText(choice){
             MainHeading = 'Series Data Base';
             MainText = 'All favourited series data and their count.';
             TableName = 'Series';
+            getSeries();
             break;
         case 'episodes':
             MainHeading = 'Episodes Data Base';
             MainText = 'All favourited episodes by series data and their count.';
             TableName = 'Episodes';
+            getEpisodes();
             break;
         case 'users':
-        default:
+        default:  
             MainHeading = 'Users Data Base';
             MainText = 'All registered user data.';
             TableName = 'Users';
+            getEpisodes();
     }
 
     $('#MainHeading').html(MainHeading);
