@@ -29,6 +29,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <script src="jquery.min.js"></script>
 
 </head>
 <body class="d-flex flex-column">
@@ -59,6 +60,7 @@
                         <div class="my-5 text-center text-xl-start">
                             <h1 class="display-5 fw-bolder text-white mb-2" id="header"></h1>
                             <p class="lead fw-normal text-white mb-4" id="overview"></p>
+                            <p class="lead fw-normal text-white mb-4" id="createdBy">Created by: </p>
                         </div>
                     </div>
                     <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" id="backdrop_path"></div>
@@ -67,77 +69,33 @@
         </header>
 
         <!-- cast section-->
-        <section class="py-5 bg-light" id="cast_section">
-            <div class="container px-5 my-5">
-                <div class="row gx-5">
-                    <div class="col-xl-8">
-                        <div class="scrolling-wrapper">
-                            <div class="text-center">
-                                <h2 class="fw-bolder">Cast:</h2>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="cast"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <div class="d-flex h-100 align-items-center justify-content-center">
-                                    <div class="text-center">
-                                        <h2 class="fw-bolder fs-5 mb-4">Facts</h2>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Vote average:</div>
-                                            <p class="mb-0" id="vote_average"></p>
-                                        </div>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Origin country:</div>
-                                            <p class="mb-0" id="origin_country"></p>
-                                        </div>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Original language:</div>
-                                            <p class="mb-0" id="original_language"></p>
-                                        </div>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Original name:</div>
-                                            <p class="mb-0" id="original_name"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <section id="cast_section">
+            <div class="container mt-3">
+                <div id="Cast" class="text-center">
                 </div>
             </div>
         </section>
 
         <!-- seasons section-->
-        <section class="py-5" id="seasons_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="text-center">
-                        <h2 class="fw-bolder">Seasons:</h2>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="seasons"></div>
-                    </div>
+        <section id="seasons_section">
+            <div class="container mt-3">
+                <div id="season" class="text-center">
                 </div>
             </div>
         </section>
 
         <!-- episodes section-->
-        <section class="py-5 episodeS" id="episodes_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="episodes"></div>
+        <section id="episodes_section">
+            <div class="container mt-3">
+                <div id="episodes" class="text-center">
                 </div>
             </div>
         </section>
 
         <!-- videos section-->
-        <section class="py-5 bg-light" id="videos_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="text-center">
-                        <h2 class="fw-bolder">Videos:</h2>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="videos"></div>
-                    </div>
+        <section id="videos_section">
+            <div class="container mt-3">
+                <div id="videos" class="text-center">
                 </div>
             </div>
         </section>
@@ -162,15 +120,11 @@
         </section>
 
         <!-- similar Tv section-->
-        <section class="py-5 bg-light" id="similarTv_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="text-center">
-                        <h2 class="fw-bolder">Recommendations:</h2>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="Recommendations"></div>
+        <section id="similarTv_section">
+            <div class="container mt-3">
+                    <div id="similarTv" class="text-center">
                     </div>
                 </div>
-            </div>
         </section>
     </main>
 

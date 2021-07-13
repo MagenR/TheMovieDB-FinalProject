@@ -1,27 +1,32 @@
 @charset "UTF-8";
-
-.scrolling-wrapper {
-    overflow-x: scroll;
-    overflow-y: hidden;
-    white-space: nowrap;
+#header {
+    padding: 5px;
 }
 
-.card {
-    display: inline-block;
+#Cast > img,
+#season > img {
+    margin: 5px;
+    padding: 5px;
 }
 
-    .card > img {
-        margin: 5px;
-        padding: 5px;
-        height: 300px;
-        float: left;
-    }
+#Cast .row,
+#season .row{
+    position: relative;
+    box-shadow: 0 0 40px rgba(51, 51, 51, .1)
+}
 
-    .card > p {
-        float: left;
-        margin: 5px;
-        padding: 5px;
-    }
+.tvPoster:hover,
+.personPicture:hover,
+.season:hover {
+    transform: scale(1.05);
+    color: darkgrey !important;
+    cursor: pointer;
+}
+
+.tvPoster:active,
+.season:active {
+    color: grey !important;
+}
 
 #videos > iframe {
     margin: 5px;
@@ -33,20 +38,8 @@
     height: 400px;
 }
 
-.card-body {
-    width: 400px;
-    text-align: justify;
-}
-
-.season:hover {
-    background-color: darkgrey !important;
-    cursor: pointer;
-}
-
-.season:active {
-    background-color: grey !important;
-}
-
 #episodes_section {
     visibility: hidden;
 }
+
+
