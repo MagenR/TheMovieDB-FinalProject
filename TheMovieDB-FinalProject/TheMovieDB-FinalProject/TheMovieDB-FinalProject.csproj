@@ -184,6 +184,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\no-image.png" />
     <Content Include="Images\placeholder-vertical.jpg" />
     <Content Include="Pages\admin.html" />
     <Content Include="Pages\insert.html" />

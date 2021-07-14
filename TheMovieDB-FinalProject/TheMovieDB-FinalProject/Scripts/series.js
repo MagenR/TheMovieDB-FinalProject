@@ -97,7 +97,7 @@ function renderEpisodes(season) {
 
         posterPath = episodes[i].still_path;
         if (posterPath == null)
-            posterPath = '../Images/placeholder-vertical.jpg';
+            posterPath = '../Images/no-image.png';
         else
             posterPath = imagePath + posterPath;
 
