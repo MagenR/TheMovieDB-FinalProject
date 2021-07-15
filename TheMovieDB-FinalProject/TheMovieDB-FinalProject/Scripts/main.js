@@ -20,6 +20,11 @@ $(document).ready(function () {
         window.location.href = "series.html?id=" + $targetId;
     });
 
+    $('li .profile').click(function () {
+        $logged_user = JSON.parse(localStorage.getItem('user'));
+        window.location.href = "user.html?id=" + $logged_user.User_id;
+    });
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     urlParam = urlParams.get('category');
