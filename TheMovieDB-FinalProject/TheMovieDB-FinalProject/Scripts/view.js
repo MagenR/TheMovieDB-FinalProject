@@ -80,7 +80,7 @@ function renderEpisodes(episodes) {
             '<div class="card episode me-2" style="width: 18rem;">' +
             '<img class="card-img-top" src="' + imagePath + episodes[i].Still_path + '"/>' +
             '<div class="card-body">' +
-            '<h5 class="card-title">' + episodes[i].Name + '</h5>' +
+            '<h5 class="card-title">' + episodes[i].Episode_name + '</h5>' +
             '<p class="card-text"> Season number: ' + episodes[i].Season_number +
             '<p> Episode number: ' + episodes[i].Episode_number +
             '<p> Air date: ' + date +

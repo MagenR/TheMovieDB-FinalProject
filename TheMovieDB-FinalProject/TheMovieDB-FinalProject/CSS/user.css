@@ -1,0 +1,21 @@
+﻿body {
+    background-color: #edf1f5;
+    border-radius: 10px
+}
+
+.tvPoster:hover,
+.personPicture:hover,
+.season:hover {
+    transform: scale(1.05);
+    color: darkgrey !important;
+    cursor: pointer;
+}
+
+.tvPoster:active,
+.season:active {
+    color: grey !important;
+}
+
+.owl-stage {
+    margin: 1rem;
+}
