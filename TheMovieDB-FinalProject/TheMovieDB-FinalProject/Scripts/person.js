@@ -4,20 +4,16 @@
     imagePath = "https://image.tmdb.org/t/p/w500";
 
 $(document).ready(function () {
-    
-    $('#tabs').on('click', '.moviesTab', function () {
-        getPersonMovies(personId);
-    });
-
-    $('#tabs').on('click', '.TvTab', function () {
-        getPersonTv(personId);
-    });
-
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     personId = urlParams.get('id');
     getPerson(personId);
+    getPersonTv(personId);
 
+    $('#tv').on('click', '.tvPoster', function () {
+        $targetId = $(this).data('seriesid');
+        window.location.href = "series.html?id=" + $targetId;
+    });
 });
 
 // ---------------------------------------- API calls ---------------------------------------------
@@ -36,7 +32,7 @@ $(document).ready(function () {
         }
 
         function getPersonSuccessCB(person) {
-            $('#personPic').append('<img src="' + imagePath + person.profile_path + '"/>');
+            $('#personPic').append('<img class="img-fluid rounded shadow" src="' + imagePath + person.profile_path + '"/>');
             $('#personName').append(person.name);
             $('#biography').append(person.biography);
             $('#known_for').append(person.known_for_department);
@@ -58,20 +54,18 @@ $(document).ready(function () {
     {
 
         //--------------------------------------- GET -------------------------------------
-        function getPersonMovies(personId) {
-            let apiCall = url + "3/person/" + personId + "/movie_credits?" + "api_key=" + key;
+        //function getPersonMovies(personId) {
+        //    let apiCall = url + "3/person/" + personId + "/movie_credits?" + "api_key=" + key;
 
-            ajaxCall("GET", apiCall, "", getPersonInMovieSuccessCB, getErrorCB);
-        }
+        //    ajaxCall("GET", apiCall, "", getPersonInMovieSuccessCB, getErrorCB);
+        //}
 
-        function getPersonInMovieSuccessCB(movie) {
-            $('#movies').addClass("active");
-            $('#tab img').remove();
-            movies = movie.cast
-            for (let i = 0; i < movies.length; i++) {
-                $('#tab').append('<img class="card" src="' + imagePath + movies[i].poster_path + '"/>');
-            }
-        }
+        //function getPersonInMovieSuccessCB(movie) {
+        //    movies = movie.cast
+        //    for (let i = 0; i < movies.length; i++) {
+        //        $('#tab').append('<img class="card" src="' + imagePath + movies[i].poster_path + '"/>');
+        //    }
+        //}
 
     }
 
@@ -86,15 +80,20 @@ $(document).ready(function () {
         }
 
         function getPersonInTvSuccessCB(tv) {
-            $('#movies').removeClass("active");
-            $('#tv').addClass("active");
-            $('#tab img').remove();
             Tv = tv.cast
             for (let i = 0; i < Tv.length; i++) {
-                $('#tab').append('<img class="card" src="' + imagePath + Tv[i].poster_path + '"/>');
+                posterPath = Tv[i].poster_path
+                if (posterPath == null)
+                    posterPath = '../Images/placeholder-vertical.jpg';
+                else
+                    posterPath = imagePath + posterPath;
+
+                $("#tv").append('<div class="col-4 col-md-2 py-2 tvPoster" data-seriesid="' + Tv[i].id + '">'
+                    + '<img class="img-fluid rounded shadow" src="' + posterPath + '"/>'
+                    + '<h5>' + Tv[i].name + '</h5>'
+                    + '</div>');
             }
         }
-
     }
 
     // Error call back -----------------------------------------------------------------------
