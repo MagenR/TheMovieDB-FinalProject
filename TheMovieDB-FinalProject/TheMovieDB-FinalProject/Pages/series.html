@@ -5,16 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Modern Business - Start Bootstrap Template</title>
+    <title> Series Page </title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
-
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 
     <!-- CSS -->
     <link href="../CSS/series.css" rel="stylesheet" />
@@ -25,33 +19,191 @@
     <!-- AJAX -->
     <script src="../Scripts/ajaxCalls.js"></script>
 
-    <!-- Data Tables -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css" />
 
 </head>
 <body class="d-flex flex-column">
+
+    <!-- Sign up Modal -->
+    <div class="modal fade" id="signUpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Create a new account:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="newUser">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="firstNameTB"><span class="red-star">★ </span>First Name:</label>
+                            <input type="text" class="form-control" id="firstNameTB" placeholder="Your first name." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastNameTB"><span class="red-star">★ </span>Last Name:</label>
+                            <input type="text" class="form-control" id="lastNameTB" placeholder="Your last name." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailAddressTB"><span class="red-star">★ </span>Email Address:</label>
+                            <input type="text" class="form-control" id="emailAddressTB" placeholder="Your email address." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordTB"><span class="red-star">★ </span>Password:</label>
+                            <input type="password" class="form-control" id="passwordTB" placeholder="Atleast 6 characters, 1 uppercase, 1 digit." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumTB"><span class="red-star">★ </span>Phone Number:</label>
+                            <input type="text" class="form-control" id="phoneNumTB" placeholder="0dd-ddddddd"
+                                   pattern="[0][0-9]{2}-[0-9]{7}"
+                                   oninvalid="this.setCustomValidity('Format should be 0dd-ddddddd')"
+                                   oninput="this.setCustomValidity('')"
+                                   required>
+                        </div>
+                        <div class="form-group my-2">
+                            <label for="genderDDL"><span class="red-star">★ </span>Gender:</label>
+                            <select id="genderDDL" required>
+                                <!--required will not accept "" value-->
+                                <option value="">Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="O">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthYearTB"><span class="red-star">★ </span>Birth Year:</label>
+                            <input type="date" class="form-control" id="birthYearTB" min='1899-01-01' required>
+                        </div>
+                        <div class="form-group">
+                            <label for="favGenreTB">Favourite Genre:</label>
+                            <input type="text" class="form-control" id="favGenreTB" placeholder="Favourite genre.">
+                        </div>
+                        <div class="form-group">
+                            <label for="addressTB"><span class="red-star">★ </span>Address:</label>
+                            <input type="text" class="form-control" id="addressTB" placeholder="your address." required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-primary my-2 text-center" value="Create Account" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log in Modal -->
+    <div class="modal fade" id="logInModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Log in to an account:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="firstNameTB">Email:</label>
+                        <input type="text" class="form-control" id="emailLogInTB" placeholder="Your email address." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastNameTB">Password:</label>
+                        <input type="password" class="form-control" id="passwordLogInTB" placeholder="Your password." required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="accessUserBtn">Log In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <main class="flex-shrink-0">
 
         <!-- Navigation-->
-        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
             <div class="container px-5">
-                <a class="navbar-brand" id="navbarSeries" href="index.html"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <a class="navbar-brand" id="navbarSeries" href="main.html">My Series List</a>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#cast_section">Cast</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#seasons_section">Seasons</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#videos_section">Videos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#reviews_section">Reviews</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#similarTv_section">Recommendations</a></li>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#cast_section">Cast</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#seasons_section">Seasons</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#videos_section">Videos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#reviews_section">Reviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#similarTv_section">Recommendations</a>
+                        </li>
                     </ul>
+
+                    <ul class="navbar-nav ms-auto" id="signupLogin">
+                        <li class="nav-item">
+                            <a class="nav-link" id="signUpBtn" href="#" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="logInBtn" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Log in</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto" id="loggedIn">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="logInDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" id="loggedIn" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item" href="#">My profile</a></li>
+                                <li><a class="dropdown-item" href="#">Favourite Episodes</a></li>
+                                <li><a class="dropdown-item" id="logOutBtn" href="#">Log Out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
         </nav>
 
-        <!-- header-->
+        <!-- Episode Modal -->
+        <div class="modal fade" id="episodeModal" tabindex="-1" aria-labelledby="episodeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="episodeModalLabel">Episode Title</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body container">
+                        <img class="img-fluid mb-3" src="" />
+                        <h5>Air date:</h5>
+                        <p class="air-date"></p>
+                        <h5>Overview:</h5>
+                        <p class="episode-overview"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="SaveEpisodeBtn">Save Episode</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- header -->
         <header id="header_section">
             <div class="container px-5">
                 <div class="row gx-5 align-items-center justify-content-center">
@@ -59,6 +211,7 @@
                         <div class="my-5 text-center text-xl-start">
                             <h1 class="display-5 fw-bolder text-white mb-2" id="header"></h1>
                             <p class="lead fw-normal text-white mb-4" id="overview"></p>
+                            <p class="lead fw-normal text-white mb-4" id="createdBy">Created by: </p>
                         </div>
                     </div>
                     <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" id="backdrop_path"></div>
@@ -67,83 +220,42 @@
         </header>
 
         <!-- cast section-->
-        <section class="py-5 bg-light" id="cast_section">
-            <div class="container px-5 my-5">
-                <div class="row gx-5">
-                    <div class="col-xl-8">
-                        <div class="scrolling-wrapper">
-                            <div class="text-center">
-                                <h2 class="fw-bolder">Cast:</h2>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="cast"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <div class="d-flex h-100 align-items-center justify-content-center">
-                                    <div class="text-center">
-                                        <h2 class="fw-bolder fs-5 mb-4">Facts</h2>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Vote average:</div>
-                                            <p class="mb-0" id="vote_average"></p>
-                                        </div>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Origin country:</div>
-                                            <p class="mb-0" id="origin_country"></p>
-                                        </div>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Original language:</div>
-                                            <p class="mb-0" id="original_language"></p>
-                                        </div>
-                                        <div class="mb-5">
-                                            <div class="small text-muted">Original name:</div>
-                                            <p class="mb-0" id="original_name"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <section id="cast_section">
+            <div class="container mt-3 text-center">
+                <h4>Cast:</h4>
+                <div id="cast" class="owl-carousel owl-theme">
                 </div>
             </div>
         </section>
 
         <!-- seasons section-->
-        <section class="py-5" id="seasons_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="text-center">
-                        <h2 class="fw-bolder">Seasons:</h2>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="seasons"></div>
-                    </div>
+        <section id="seasons_section">
+            <div class="container mt-3 text-center">
+                <div id="season" class="row">
+                    <h4>Seasons:</h4>
                 </div>
             </div>
         </section>
 
         <!-- episodes section-->
-        <section class="py-5 episodeS" id="episodes_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="episodes"></div>
+        <section id="episodes_section">
+            <div class="container mt-3 text-center">
+                <div id="episodes" class="row">
+                    <h4></h4>
                 </div>
             </div>
         </section>
 
         <!-- videos section-->
-        <section class="py-5 bg-light" id="videos_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="text-center">
-                        <h2 class="fw-bolder">Videos:</h2>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="videos"></div>
-                    </div>
+        <section id="videos_section" hidden>
+            <div class="container mt-3 text-center">
+                <div id="videos" class="row">
                 </div>
             </div>
         </section>
 
         <!-- reviews section-->
-        <section class="py-5" id="reviews_section">
+        <section class="py-5" id="reviews_section" hidden>
             <div class="container px-5 my-5">
                 <div class="text-center">
                     <h2 class="fw-bolder">Reviews:</h2>
@@ -162,13 +274,9 @@
         </section>
 
         <!-- similar Tv section-->
-        <section class="py-5 bg-light" id="similarTv_section">
-            <div class="container px-5 my-5">
-                <div class="scrolling-wrapper">
-                    <div class="text-center">
-                        <h2 class="fw-bolder">Recommendations:</h2>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" id="Recommendations"></div>
-                    </div>
+        <section id="similarTv_section" hidden>
+            <div class="container mt-3 text-center">
+                <div id="similarTv" class="row">
                 </div>
             </div>
         </section>
@@ -193,7 +301,11 @@
     <!-- Bootstrap dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
     <!-- JS Functions -->
+    <script src="../Scripts/userLogin.js"></script>
     <script src="../Scripts/series.js"></script>
 
 </body>

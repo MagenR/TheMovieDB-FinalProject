@@ -184,6 +184,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\no-image.png" />
     <Content Include="Images\placeholder-vertical.jpg" />
     <Content Include="Pages\admin.html" />
     <Content Include="Pages\insert.html" />
@@ -224,6 +225,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\person.js" />
     <Content Include="Scripts\series.js" />
+    <Content Include="Scripts\userLogin.js" />
     <Content Include="Scripts\view.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
