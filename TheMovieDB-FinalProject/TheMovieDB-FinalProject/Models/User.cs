@@ -58,7 +58,6 @@ namespace TheMovieDB.Models
             return ds.GetUserList();
         }
 
-
     } // End of class definition - User.
 
 }

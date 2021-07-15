@@ -6,7 +6,7 @@ $(document).ready(function () {
     url = "https://api.themoviedb.org/";
     imagePath = "https://image.tmdb.org/t/p/w500";
 
-    loadSavedLogIn();
+    loadUserData();
     initOwl();
     getSeriesFavs();
     
@@ -26,9 +26,9 @@ $(document).ready(function () {
 // API Calls --------------------------------------------------------------------------------------
 
 {
-
+    
     // ----------------------------------------- Series Favs --------------------------------
-
+    
     {
 
         // ----------------------------------------- GET ----------------------------------------
@@ -44,9 +44,9 @@ $(document).ready(function () {
         }
 
     }
-
+    
     // ----------------------------------------- Episodes -----------------------------------------
-
+     
     {
         // ----------------------------------------- GET ------------------------------------------
 
@@ -71,10 +71,30 @@ $(document).ready(function () {
 
 //--------------------------------------- Functions -----------------------------------------------
 
-function loadSavedLogIn() {
-    logged_user = JSON.parse(localStorage.getItem('user'));
+function loadUserData() {
+    /*Compare logged user to query string id */
+
+    /*logged_user = JSON.parse(localStorage.getItem('user'));*/
     /*if (logged_user != null)
         getSeriesNames();*/
+    /* if logged user = query string id */
+    /*appendUserData(this user);*/
+    /* else - get user data ajax */
+    /*appendUserData(query string id user);*/
+    /*hide upload picture button*/
+
+    /*read picture from file - if exists, else placeholder */
+}
+
+function appendUserData() {
+    $('#uName').html(logged_user.First_name + ' ' + logged_user.Last_name);
+    $('#uEmail').html(logged_user.Email);
+    $('#uEmail').html(logged_user.Email);
+    $('#uPhone').html(logged_user.Phone_num);
+    $('#uPhone').html(logged_user.Address);
+    $('#uGenre').html(logged_user.Fav_genre);
+    $('#uGender').html(logged_user.Gender);
+    $('#uGender').html(logged_user.Birth_date);
 }
 
 function buildSeries(series) {
@@ -127,16 +147,17 @@ function renderEpisodes(episodes) {
     var posterPath = null;
 
     for (let i = 0; i < episodes.length; i++) {
-
+    
         posterPath = episodes[i].Still_path;
         if (posterPath == null)
             posterPath = '../Images/no-image.png';
         else
             posterPath = imagePath + posterPath;
-
+    
         $("#episodes").append('<div class="col-4 col-md-3 py-2 episode tvPoster" data-seasonNum="' + episodes[i].Season_number + '" data-episodeNum="' + episodes[i].Episode_number + '">'
             + '<img class="img-fluid popular rounded shadow" src="' + posterPath + '"/>'
             + '<h6>' + episodes[i].Episode_name + '</h6>'
             + '</div>');
     }
+
 }
