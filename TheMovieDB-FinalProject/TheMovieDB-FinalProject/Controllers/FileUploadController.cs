@@ -38,7 +38,6 @@ namespace TheMovieDB_FinalProject.Controllers
                         imageLink = "uploadedFiles/" + fname;
                     }
             }
-
             // Return status code  
             return Request.CreateResponse(HttpStatusCode.Created, imageLink);
         }

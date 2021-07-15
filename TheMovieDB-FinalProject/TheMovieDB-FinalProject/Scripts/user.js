@@ -140,7 +140,12 @@ function uploadImg() {
 }
 
 function showImage() {
+    console.log(data);
     $('.profilePic').attr("src", data);
+}
+
+function error(data) {
+    console.log(data);
 }
 
 
