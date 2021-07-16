@@ -136,15 +136,10 @@ $(document).ready(function () {
         }
 
         function getEpisodeSuccessCB(episode) {
+            Episode = episode;
             logged_user = JSON.parse(localStorage.getItem('user'));
-            episodeList = getSavedEpisode(logged_user.User_id, tvId);
-            for (let i = 0; i < episodeList.length; i++) {
-                if (episodeList[i].episode_number == episode.episode_number)
-                    renderEpisodeModal(episode);
-                    ('#SaveEpisodeBtn').removeAttr('disabled');
-            }
             renderEpisodeModal(episode);
-            episodeToAdd = episode.episode_number;
+            getSavedEpisode(logged_user.User_id, tvId);
         }
 
         //--------------------------------------- POST ------------------------------------
@@ -189,7 +184,12 @@ $(document).ready(function () {
         }
 
         function getSavedEpisodeSuccessCB(savedEpisodes) {
-            return savedEpisodes;
+            for (let i = 0; i < savedEpisodes.length; i++) {
+                if (savedEpisodes[i].Episode_number == Episode.episode_number)
+                    $('#SaveEpisodeBtn').hide();
+                else
+                    episodeToAdd = Episode.episode_number;
+            }
         }
     }
 
