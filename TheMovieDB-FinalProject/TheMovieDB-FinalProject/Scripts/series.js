@@ -183,7 +183,7 @@ $(document).ready(function () {
     {
         //--------------------------------------- GET -------------------------------------
         function getSavedEpisode(userId, TvId) {
-            let api = "../api/Episodes?user_id=" + userId + "tv_id=" + TvId;
+            let api = "../api/Episodes?user_id=" + userId + "&tv_id=" + TvId;
 
             ajaxCall("GET", api, "", getSavedEpisodeSuccessCB, getErrorCB);
         }
