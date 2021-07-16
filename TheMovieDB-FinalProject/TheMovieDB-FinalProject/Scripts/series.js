@@ -26,6 +26,8 @@ $(document).ready(function () {
         $('#episodeModal').modal('show');
     });
 
+    $('#SaveEpisodeBtn').click(saveEp);
+
 });
 
 // API Calls --------------------------------------------------------------------------------------
@@ -45,6 +47,7 @@ $(document).ready(function () {
         }
 
         function getTvSuccessCB(tv) {
+            series = tv;
             document.title = tv.name;
             renderTvSection(tv);
             renderSeasonsList(tv);
@@ -54,6 +57,36 @@ $(document).ready(function () {
             getVideos();
             getSimilarTv();
             */
+        }
+
+        //--------------------------------------- POST --------------------------------------
+
+        function postTv() {
+
+            tv_series = {
+                tv_id: series.id,
+                first_air_date: series.first_air_date,
+                name: series.name,
+                origin_country: series.origin_country[0],
+                original_language: series.original_language,
+                overview: series.overview,
+                popularity: series.popularity,
+                poster_path: series.poster_path
+            }
+
+            let api = "../api/Series";
+
+            ajaxCall("POST", api, JSON.stringify(tv_series), postSeriesSuccessCB, postSeriesErrorCB);
+        }
+
+        function postSeriesSuccessCB(msg) {
+            console.log(msg);
+            postEpisode(episodeToAdd);
+        }
+
+        function postSeriesErrorCB(err) {
+            console.log(err.status + " " + err.responseJSON.Message);
+            postEpisode(episodeToAdd);
         }
 
     }
@@ -103,7 +136,89 @@ $(document).ready(function () {
         }
 
         function getEpisodeSuccessCB(episode) {
+            logged_user = JSON.parse(localStorage.getItem('user'));
+            episodeList = getSavedEpisode(logged_user.User_id, tvId);
+            for (let i = 0; i < episodeList.length; i++) {
+                if (episodeList[i].episode_number == episode.episode_number)
+                    renderEpisodeModal(episode);
+                    ('#SaveEpisodeBtn').removeAttr('disabled');
+            }
             renderEpisodeModal(episode);
+            episodeToAdd = episode.episode_number;
+        }
+
+        //--------------------------------------- POST ------------------------------------
+
+        function postEpisode(epNum) {
+
+            episode = {
+                Tv_id: tvId,
+                Season_number: episodes[epNum].season_number,
+                Episode_number: episodes[epNum].episode_number,
+                Episode_name: episodes[epNum].name,
+                Still_path: episodes[epNum].still_path,
+                Overview: episodes[epNum].overview,
+                Air_date: episodes[epNum].air_date
+            }
+
+            let api = "../api/Episodes";
+
+            ajaxCall("POST", api, JSON.stringify(episode), postEpisodeSuccessCB, postEpisodeErrorCB);
+        }
+
+        function postEpisodeSuccessCB(msg) {
+            console.log(msg);
+            postPreference();
+        }
+
+        function postEpisodeErrorCB(err) {
+            console.log(err.status + " " + err.responseJSON.Message);
+            postPreference();
+        }
+
+    }
+
+    // Saved Episode -----------------------------------------------------------------------------------
+
+    {
+        //--------------------------------------- GET -------------------------------------
+        function getSavedEpisode(userId, TvId) {
+            let api = "../api/Episodes?user_id=" + userId + "tv_id=" + TvId;
+
+            ajaxCall("GET", api, "", getSavedEpisodeSuccessCB, getErrorCB);
+        }
+
+        function getSavedEpisodeSuccessCB(savedEpisodes) {
+            return savedEpisodes;
+        }
+    }
+
+    // Preference -------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- POST ------------------------------------
+
+        function postPreference() {
+
+            let preference = {
+                UserPreference: logged_user,
+                EpisodePreference: episode
+            }
+
+            let api = "../api/Preferences";
+
+            ajaxCall("POST", api, JSON.stringify(preference), postPreferenceSuccessCB, postPreferenceErrorCB);
+        }
+
+
+        function postPreferenceSuccessCB(msg) {
+            console.log(msg);
+            $('#episodeModal').modal('hide');
+        }
+
+        function postPreferenceErrorCB(err) {
+            console.log(err.status + " " + err.responseJSON.Message);
         }
 
     }
@@ -232,6 +347,10 @@ function buildCast(cast) {
     }
 }
 
+function saveEp() {
+    postTv();
+}
+
 // Renders-----------------------------------------------------------------------------------
 
 {
@@ -251,7 +370,7 @@ function buildCast(cast) {
     }
 
     function renderSeasonsList(tv) {
-        var seasons = tv.seasons;
+        seasons = tv.seasons;
         var posterPath = null;
         /*
         for (let i = seasons[0].season_number; i < seasons.length; i++) {
@@ -283,8 +402,8 @@ function buildCast(cast) {
 
     }
 
-    function renderEpisodes(season) {       
-        var episodes = season.episodes;
+    function renderEpisodes(season) {
+        episodes = season.episodes;
         var posterPath = null;
 
         $('#episodes').html('<h4>' + season.name + ' Episodes: </h4>');
@@ -298,7 +417,7 @@ function buildCast(cast) {
             else
                 posterPath = imagePath + posterPath;
 
-            $("#episodes").append('<div class="col-4 col-md-2 py-2 episode tvPoster" data-seasonNum="' + season.season_number + '" data-episodeNum="' + episodes[i].episode_number  + '">'
+            $("#episodes").append('<div class="col-4 col-md-2 py-2 episode tvPoster" data-seasonNum="' + season.season_number + '" data-episodeNum="' + episodes[i].episode_number + '">'
                 + '<img class="img-fluid popular rounded shadow" src="' + posterPath + '"/>'
                 + '<h5> Episode ' + (i + 1) + ': ' + episodes[i].name + '</h5>'
                 + '</div>');
