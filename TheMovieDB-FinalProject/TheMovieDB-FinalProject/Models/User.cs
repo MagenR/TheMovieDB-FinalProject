@@ -52,6 +52,12 @@ namespace TheMovieDB.Models
             return ds.GetUser(email, password);
         }
 
+        public User Get(int id)
+        {
+            DataServices ds = new DataServices();
+            return ds.GetUser(id);
+        }
+
         public List<User> GetUsersList()
         {
             DataServices ds = new DataServices();

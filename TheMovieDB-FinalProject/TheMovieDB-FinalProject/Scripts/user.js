@@ -11,12 +11,12 @@ $(document).ready(function () {
     userId = urlParams.get('id');
 
     loadUserData(userId);
+
     initOwl();
     getSeriesFavs();
+    showImage(userId);
 
-    $("#showEpisodesBtn").click(getEpisodes);
-
-    $('#openImageUpload').click(selectImg);
+    $('#uploadProfilePic').click(uploadImg);
 
     $('#seriesPanel').on('click', '.seriesTv', function () {
         getEpisodes($(this).attr('data-seriesid'));
@@ -36,14 +36,14 @@ $(document).ready(function () {
     {
         // ----------------------------------------- GET ----------------------------------------
 
-        function getUser(userId) {
+        function getUserById(userId) {
             let api = "../api/Users?id=" + userId;
 
-            ajaxCall("GET", api, "", getUserSuccessCB, getErrorCB);
+            ajaxCall("GET", api, "", getUserByIdSuccessCB, getErrorCB);
         }
 
-        function getUserSuccessCB(user) {
-            return user;
+        function getUserByIdSuccessCB(user) {
+            appendUserData(user);
         }
     }
 
@@ -54,7 +54,7 @@ $(document).ready(function () {
         // ----------------------------------------- GET ----------------------------------------
 
         function getSeriesFavs() {
-            let api = "../api/Series?user_id=" + logged_user.User_id;
+            let api = "../api/Series?user_id=" + userId;
 
             ajaxCall("GET", api, "", getSeriesFavsSuccessCB, getErrorCB);
         }
@@ -70,12 +70,12 @@ $(document).ready(function () {
     {
         // ----------------------------------------- GET ------------------------------------------
 
-        function getEpisodes(tv_id) {
-            let api = "../api/Episodes?user_id=" + logged_user.User_id + "&tv_id=" + tv_id;
+        function getEpisodesUser(tv_id) {
+            let api = "../api/Episodes?user_id=" + userId + "&tv_id=" + tv_id;
             ajaxCall("GET", api, "", getEpisodesSuccessCB, getErrorCB);
         }
 
-        function getEpisodesSuccessCB(episodes) {
+        function getEpisodesUserSuccessCB(episodes) {
             renderEpisodes(episodes);
         }
 
@@ -92,40 +92,41 @@ $(document).ready(function () {
 //--------------------------------------- Functions -----------------------------------------------
 
 function loadUserData(userId) {
-    /*Compare logged user to query string id */
+
     logged_user = JSON.parse(localStorage.getItem('user'));
-    if (logged_user != null) {
-        if (logged_user.User_id == userId)
-            appendUserData(logged_user);
-        else {
-            user = getUser(userId);
-            appendUserData(user);
-            /*hide upload picture button*/
-            $('.profilePicBtn').hide();
-        }
+    if (logged_user != null && (logged_user.User_id == userId || userId == null))
+        appendUserData(logged_user);
+    else {
+        user = getUserById(userId);
+        $('#formUpload').hide();
     }
+        
 }
 
-function appendUserData(loggedUser) {
-    $('#uName').html(loggedUser.First_name + ' ' + loggedUser.Last_name);
-    $('#uEmail').html(loggedUser.Email);
-    $('#uEmail').html(loggedUser.Email);
-    $('#uPhone').html(loggedUser.Phone_num);
-    $('#uPhone').html(loggedUser.Address);
-    $('#uGenre').html(loggedUser.Fav_genre);
-    $('#uGender').html(loggedUser.Gender);
-    $('#uGender').html(loggedUser.Birth_date);
-}
+function appendUserData(user) {
+    userId = user.User_id;
+    var bday = new Date(user.Birth_date);
+    bday = bday.toLocaleDateString('he-IL');
+    $('#uName').html(user.First_name + ' ' + user.Last_name);
 
-function selectImg() {
-    $('#files').trigger('click');
-    uploadImg();
+    switch (user.Gender) {
+        case 'F': $('#uGender').html('Female'); break;
+        case 'M': $('#uGender').html('Male'); break;
+        default: $('#uGender').html('Other');
+    }
+
+    $('#uBirthday').html(bday);
+    $('#uEmail').html(user.Email);
+    $('#uPhone').html(user.Phone_num);
+    $('#uAddress').html(user.Address);
+    $('#uGenre').html(user.Fav_genre);     
 }
 
 function uploadImg() {
     var data = new FormData();
-    file = $("#files").get(0).files;
-    data.append("UploadedImage", file);
+    var files = $('#profilePicInput').get(0).files;
+    data.append('UploadedImage', files[0]);
+    data.append('user_id', logged_user.User_id);
 
     $.ajax({
         type: "POST",
@@ -139,15 +140,21 @@ function uploadImg() {
     return false;
 }
 
-function showImage() {
-    console.log(data);
-    $('.profilePic').attr("src", data);
+function showImage(user_id) {
+
+    var profilePath = '../uploadedFiles/' + user_id + '.png';
+
+    $.get(profilePath)
+        .done(function () {
+            $('#profilePic').attr("src", profilePath);
+        }).fail(function () {
+            $('#profilePic').attr("src", '../Images/profile-placeholder.jpg');
+        })
 }
 
 function error(data) {
     console.log(data);
 }
-
 
 function buildSeries(series) {
     for (let i = 0; i < series.length; i++) {

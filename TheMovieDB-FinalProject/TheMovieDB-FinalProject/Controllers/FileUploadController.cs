@@ -25,17 +25,17 @@ namespace TheMovieDB_FinalProject.Controllers
                 HttpPostedFile httpPostedFile = httpContext.Request.Files[0];
 
                 // this is an example of how you can extract addional values from the Ajax call
-                string name = httpContext.Request.Form["name"];
+                string name = httpContext.Request.Form["user_id"];
 
                     if (httpPostedFile != null)
                     {
                         // Construct file save path  
                         //var fileSavePath = Path.Combine(HostingEnvironment.MapPath(ConfigurationManager.AppSettings["fileUploadFolder"]), httpPostedFile.FileName);
-                        string fname = httpPostedFile.FileName.Split('\\').Last();
-                        var fileSavePath = Path.Combine(HostingEnvironment.MapPath("~/uploadedFiles"), fname);
+                        string ftype = httpPostedFile.FileName.Split('.').Last();
+                        var fileSavePath = Path.Combine(HostingEnvironment.MapPath("~/uploadedFiles"), name + ".png");
                         // Save the uploaded file  
                         httpPostedFile.SaveAs(fileSavePath);
-                        imageLink = "uploadedFiles/" + fname;
+                        imageLink = "uploadedFiles/" + name + ".png";
                     }
             }
             // Return status code  
