@@ -23,6 +23,13 @@ namespace TheMovieDB.Models
 
         // Methods --------------------------------------------------------------------------------
 
+        // Get a specific preference, if exists.
+        public bool GetCheckPreference(int user_id, int series_id, int season_id, int episode_id)
+        {
+            DataServices ds = new DataServices();
+            return ds.GetCheckPreference(user_id, series_id, season_id, episode_id);
+        }
+
         // Inserts itself to the database.
         public int Insert()
         {
