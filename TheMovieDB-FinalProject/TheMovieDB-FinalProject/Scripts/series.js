@@ -19,6 +19,7 @@ $(document).ready(function () {
 
     GetTv(tvId);
     initOwl();
+    initComments();
 
     $('#season').on('click', '.seasons', function () {
         seasonNum = $(this).attr('data-seasonNum');
@@ -204,9 +205,14 @@ $(document).ready(function () {
 
         function postPreference() {
 
+            let epPreference = {
+                Tv_id: tvId,
+                Season_number: episode.season_number,
+                Episode_number: episode.episode_number,
+            }
             let preference = {
                 UserPreference: logged_user,
-                EpisodePreference: episode
+                EpisodePreference: epPreference
             }
 
             let api = "../api/Preferences";
