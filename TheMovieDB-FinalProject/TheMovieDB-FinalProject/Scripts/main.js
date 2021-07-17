@@ -5,7 +5,7 @@ key = "d8484ecfbfb906740724a447b5d63b12";
 url = "https://api.themoviedb.org/";
 imagePath = "https://image.tmdb.org/t/p/w500";
 maxResults = 6;
-total_page = "";
+total_pages = "";
 pageNum = 1;
 // ---------------------------------------- Controller functions-----------------------------------
 
@@ -61,7 +61,6 @@ $(document).ready(function () {
         urlParam = 'tv'
         apiCallSearch = 'tv';
     }
-
 });
 
 // ---------------------------------------- API calls ---------------------------------------------
