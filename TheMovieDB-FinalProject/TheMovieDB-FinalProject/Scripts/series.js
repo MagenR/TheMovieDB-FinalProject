@@ -47,6 +47,9 @@ $(document).ready(function () {
     });
 
     $('#SaveEpisodeBtn').click(addEpisodePreference);
+    $('#DiscussEpisodeBtn').click(function () {
+        window.location.href = "episode.html?tv_id=" + tvId + "&season_num=" + episode.season_number + "&episode_num=" + episode.episode_number;
+    })
 
 });
 
@@ -220,7 +223,6 @@ $(document).ready(function () {
                 Season_number: episode.season_number,
                 Episode_number: episode.episode_number,
             }
-
             let preference = {
                 UserPreference: logged_user,
                 EpisodePreference: epPreference
