@@ -132,6 +132,36 @@ namespace TheMovieDB.Models.DAL
                 cmd.Parameters.Add("@episode_number", SqlDbType.Int);
                 cmd.Parameters["@episode_number"].Value = p.EpisodePreference.Episode_number;
             }
+            else if (o is Comment)
+            {
+                Comment c = (Comment)o;
+                commandText += "TheMovieDB_Comments_2021 " +
+                    "values(@user_id, @tv_id, @season_number," +
+                    " @episode_number, @parent_comment_id, @content, @date_created) ";
+                cmd.CommandText = commandText;
+
+                cmd.Parameters.Add("@user_id", SqlDbType.Int);
+                cmd.Parameters["@user_id"].Value = c.User_id;
+
+                cmd.Parameters.Add("@tv_id", SqlDbType.Int);
+                cmd.Parameters["@tv_id"].Value = c.Tv_id;
+
+                cmd.Parameters.Add("@season_number", SqlDbType.Int);
+                cmd.Parameters["@season_number"].Value = c.Season_number;
+
+                cmd.Parameters.Add("@episode_number", SqlDbType.Int);
+                cmd.Parameters["@episode_number"].Value = c.Episode_number;
+                
+                cmd.Parameters.Add("@parent_comment_id", SqlDbType.Int);
+                if (c.Parent_comment_id == null)
+                    c.Parent_comment_id = 0;
+                cmd.Parameters["@parent_comment_id"].Value = c.Parent_comment_id;
+
+                cmd.Parameters.AddWithValue("@content", c.Content);
+
+                cmd.Parameters.Add("@date_created", SqlDbType.DateTime);
+                cmd.Parameters["@date_created"].Value = (c.Date_created).ToString("yyyy-MM-dd");
+            }
 
         }
 
@@ -680,6 +710,60 @@ namespace TheMovieDB.Models.DAL
                 // get a reader
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
                 return dr.HasRows; // True = a record was found, false = no record found -> he can add the episode.
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        public List<Comment> GetCommentsList(int tv_id, int season_number, int episode_number)
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR = "SELECT c.comment_id, c.user_id, u.first_name + ' ' + u.last_name as 'user_name', c.parent_comment_id, c.content, c.date_created " +
+                    "FROM TheMovieDB_Comments_2021 as c inner join TheMovieDB_Users_2021 as u on c.user_id = u.user_id " +
+                    "WHERE c.tv_id = '" + tv_id + "' and c.season_number = '" + season_number + "' and c.episode_number = '" + episode_number + "'";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                if (dr.HasRows == false) // no record returned.
+                    return null; // if no series found.
+
+                List<Comment> episode_comments= new List<Comment>();
+
+                while (dr.Read())
+                {
+                    Comment c = new Comment();
+
+                    c.Comment_id = (int)dr["comment_id"];
+                    c.User_id = (int)dr["user_id"];
+                    c.User_name = (string)dr["user_name"];
+                    c.Parent_comment_id = (int)dr["parent_comment_id"];
+                    if (c.Parent_comment_id == 0)
+                        c.Parent_comment_id = null;
+                    c.Content = (string)dr["content"];
+                    c.Date_created = (DateTime)dr["date_created"];
+
+                    episode_comments.Add(c);
+                }
+
+                return episode_comments;
             }
             catch (Exception ex)
             {

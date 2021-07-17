@@ -19,7 +19,6 @@ $(document).ready(function () {
 
     GetTv(tvId);
     initOwl();
-    initComments();
 
     $('#season').on('click', '.seasons', function () {
         seasonNum = $(this).attr('data-seasonNum');
@@ -48,6 +47,9 @@ $(document).ready(function () {
     });
 
     $('#SaveEpisodeBtn').click(addEpisodePreference);
+    $('#DiscussEpisodeBtn').click(function () {
+        window.location.href = "episode.html?tv_id=" + tvId + "&season_num=" + episode.season_number + "&episode_num=" + episode.episode_number;
+    })
 
 });
 

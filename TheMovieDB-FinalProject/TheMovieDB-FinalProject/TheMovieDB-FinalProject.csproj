@@ -155,6 +155,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\EpisodesController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DAL\DataServices.cs" />
     <Compile Include="Models\Episode.cs" />
     <Compile Include="Models\Preference.cs" />
@@ -191,6 +193,7 @@
     <Content Include="Images\placeholder-vertical.jpg" />
     <Content Include="Images\profile-placeholder.jpg" />
     <Content Include="Pages\admin.html" />
+    <Content Include="Pages\episode.html" />
     <Content Include="Pages\insert.html" />
     <Content Include="Pages\main.html" />
     <Content Include="CSS\person.css" />
@@ -223,6 +226,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\comments.js" />
+    <Content Include="Scripts\episode.js" />
     <Content Include="Scripts\jquery-comments.min.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

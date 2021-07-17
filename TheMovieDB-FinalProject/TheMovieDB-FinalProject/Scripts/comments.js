@@ -16,12 +16,25 @@ function initComments() {
         profilePictureURL: profilePicPath,
         currentUserId: logged_user.User_id,
         roundProfilePictures: true,
-
+        fieldMappings: {
+            id: 'Comment_id',
+            parent: 'Parent_comment_id',
+            content: 'Content',
+            fullname: 'User_name',
+            profilePictureURL: 'ProfilePictureURL',
+            created: 'Date_created'
+        },
+        refresh: function () {
+            $('#comments-container').addClass('rendered');
+        },
         // Read comments from the DB.
         getComments: function (success, error) {
             $.ajax({
                 type: 'get',
-                url: '../api/Comments',
+                url: '../api/Comments?tvid=' + tv_id + '&season_number=' + season_num + '&episode_number=' + episode_num,
+                //contentType: 'application/json; charset=utf-8',
+                //data: JSON.stringify({ tvid: tv_id, season_number: season_num, episode_number: episode_num }),
+                //dataType: 'json',
                 success: function (commentsArray) {
                     success(commentsArray)
                 },
@@ -31,10 +44,21 @@ function initComments() {
 
         // Post a comment to the db.
         postComment: function (commentJSON, success, error) {
+            
+            var commentToAdd = {
+                User_id: logged_user.User_id,
+                Tv_id: tv_id,
+                Season_number: season_num,
+                Episode_number: episode_num,
+                Parent_comment_id: commentJSON.Parent_comment_id,
+                Content: commentJSON.Content,
+                Date_created: commentJSON.Date_created
+            }
+            
             $.ajax({
                 type: 'post',
-                url: '/api/comments/',
-                data: commentJSON,
+                url: '../api/Comments/',
+                data: commentToAdd,
                 success: function (comment) {
                     success(comment)
                 },
@@ -43,8 +67,9 @@ function initComments() {
         },
 
         // Upvote comment, save to the db.
+        /*
         upvoteComment: function (commentJSON, success, error) {
-            var commentURL = '/api/comments/' + commentJSON.id;
+            var commentURL = '../api/Comments/' + commentJSON.id;
             var upvotesURL = commentURL + '/upvotes/';
 
             if (commentJSON.userHasUpvoted) {
@@ -70,6 +95,7 @@ function initComments() {
                 });
             }
         }
+        */
 
     }); 
 } // End of "initComments".
