@@ -1,12 +1,15 @@
-﻿userId = 0;
+﻿
+// global vars ------------------------------------------------------------------------------------
+
+userId = 0;
 profilePicPath = '../Images/profile - placeholder.jpg';
+
 function initComments() {
     if (logged_user != null) {
         var profilePicPath = '../uploadedFiles/' + logged_user.User_id + '.png';
         userId = logged_user.User_id;
     }
     
-
     $('#comments-container').comments({
         profilePictureURL: profilePicPath,
         currentUserId: userId,
@@ -19,25 +22,39 @@ function initComments() {
             content: 'Content',
             fullname: 'User_name',
             profilePictureURL: 'ProfilePictureURL',
-            created: 'Date_created'
+            created: 'Date_created',
+            upvoteCount: 'Upvote_count',
+            userHasUpvoted : 'UserUpvoted'
         },
         refresh: function () {
             $('#comments-container').addClass('rendered');
         },
         // Read comments from the DB.
         getComments: function (success, error) {
+            if (userId == 0)
             $.ajax({
                 type: 'get',
                 url: '../api/Comments?tvid=' + tv_id + '&season_number=' + season_num + '&episode_number=' + episode_num,
-                //contentType: 'application/json; charset=utf-8',
-                //data: JSON.stringify({ tvid: tv_id, season_number: season_num, episode_number: episode_num }),
-                //dataType: 'json',
                 success: function (commentsArray) {
                     success(commentsArray)
                     console.log("Comments got");
                 },
-                error: getErrorCB
+                error: function (err) {
+                    getErrorCB(err)
+                }
             });
+            else
+                $.ajax({
+                    type: 'get',
+                    url: '../api/Comments/Upvoted?tvid=' + tv_id + '&season_number=' + season_num + '&episode_number=' + episode_num + '&user_id=' + userId,
+                    success: function (commentsArray) {
+                        success(commentsArray)
+                        console.log("Comments got");
+                    },
+                    error: function (err) {
+                        getErrorCB(err)
+                    }
+                });
         },
 
         // Post a comment to the db.
@@ -63,7 +80,9 @@ function initComments() {
                     success(data)
 
                 },
-                error: getErrorCB
+                error: function (err) {
+                    getErrorCB(err)
+                }
             });
         },
 
@@ -77,30 +96,35 @@ function initComments() {
                 Comment_id: commentJSON.Comment_id,
                 Upvoter_id: logged_user.User_id
             }
-            if (commentJSON.user_has_upvoted) {
+            if (commentJSON.UserUpvoted) {
                 $.ajax({
                     type: 'post',
-                    url: '../api/Comments/Upvote',
+                    url: '../api/Upvotes',
                     data: upvote,
                     success: function () {
                         success(commentJSON)
                     },
-                    error: error
+                    error: function (err) {
+                        getErrorCB(err)
+                    }
                 });
             } else {
                 $.ajax({
                     type: 'delete',
-                    url: upvotesURL + upvoteId,
+                    url: '../api/Upvotes',
+                    data: upvote,
                     success: function () {
                         success(commentJSON)
                     },
-                    error: error
+                    error: function (err) {
+                        getErrorCB(err)
+                    }
                 });
             }
         }
         
-
-    }); 
+    });
+    
 } // End of "initComments".
 
 function getErrorCB(err) {

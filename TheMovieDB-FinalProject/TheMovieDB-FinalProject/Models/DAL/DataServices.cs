@@ -277,6 +277,9 @@ namespace TheMovieDB.Models.DAL
             }
         }
 
+        //--------------------------------------------------------------------------------------------------
+        // Get user credentials by id.
+        //--------------------------------------------------------------------------------------------------
         public User GetUser(int id)
         {
             SqlConnection con = null;
@@ -739,6 +742,9 @@ namespace TheMovieDB.Models.DAL
             }
         }
 
+        //--------------------------------------------------------------------------------------------------
+        // Get list of comments for a certain episode.
+        //--------------------------------------------------------------------------------------------------
         public List<Comment> GetCommentsList(int tv_id, int season_number, int episode_number)
         {
             SqlConnection con = null;
@@ -747,9 +753,13 @@ namespace TheMovieDB.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                string selectSTR = "SELECT c.comment_id, c.user_id, u.first_name + ' ' + u.last_name as 'user_name', c.parent_comment_id, c.content, c.date_created " +
+                string selectSTR =
+                    "SELECT c.comment_id, c.user_id, u.first_name + ' ' + u.last_name as 'user_name', c.parent_comment_id, c.content, c.date_created, count(cu.comment_id) as numOfLikes " +
                     "FROM TheMovieDB_Comments_2021 as c inner join TheMovieDB_Users_2021 as u on c.user_id = u.user_id " +
-                    "WHERE c.tv_id = '" + tv_id + "' and c.season_number = '" + season_number + "' and c.episode_number = '" + episode_number + "'";
+                    "left join TheMovieDB_Comments_Upvotes_2021 as cu on c.comment_id = cu.comment_id " +
+                    "WHERE c.tv_id = '" + tv_id + "' and c.season_number = '" + season_number + "' and c.episode_number = '" + episode_number + "' " +
+                    "GROUP BY c.comment_id, c.user_id, u.first_name, last_name, c.parent_comment_id, c.content, c.date_created ";
+
 
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -772,6 +782,7 @@ namespace TheMovieDB.Models.DAL
                         c.Parent_comment_id = null;
                     c.Content = (string)dr["content"];
                     c.Date_created = (DateTime)dr["date_created"];
+                    c.Upvote_count = (int)dr["numOfLikes"];
 
                     episode_comments.Add(c);
                 }
@@ -791,6 +802,143 @@ namespace TheMovieDB.Models.DAL
                 }
 
             }
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // Get list of comments for a certain episode and user.
+        //--------------------------------------------------------------------------------------------------
+        public List<Comment> GetCommentsList(int tv_id, int season_number, int episode_number, int user_id)
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR =
+                    "SELECT c.comment_id, c.user_id, u.first_name + ' ' + u.last_name as 'user_name', " +
+                    "c.parent_comment_id, c.content, c.date_created, count(cu.comment_id) as numOfLikes, " +
+                    "case when c.comment_id in (SELECT c.comment_id " +
+                                                "FROM TheMovieDB_Comments_2021 as c inner join TheMovieDB_Users_2021 as u on c.user_id = u.user_id " +
+                                                "left join TheMovieDB_Comments_Upvotes_2021 as cu on c.comment_id = cu.comment_id " +
+                                                "WHERE cu.user_id = " + user_id + ") then 'true' else 'false' end as 'UserUpvoted' " +
+                    "FROM TheMovieDB_Comments_2021 as c inner join TheMovieDB_Users_2021 as u on c.user_id = u.user_id " +
+                        "left join TheMovieDB_Comments_Upvotes_2021 as cu on c.comment_id = cu.comment_id " +
+                    "WHERE c.tv_id = '" + tv_id + "' and c.season_number = '" + season_number + "' and c.episode_number = '" + episode_number + "' " +
+                    "GROUP BY c.comment_id, c.user_id, u.first_name, last_name, c.parent_comment_id, c.content, c.date_created";
+
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                if (dr.HasRows == false) // no record returned.
+                    return null; // if no series found.
+
+                List<Comment> episode_comments = new List<Comment>();
+
+                while (dr.Read())
+                {
+                    Comment c = new Comment();
+
+                    c.Comment_id = (int)dr["comment_id"];
+                    c.User_id = (int)dr["user_id"];
+                    c.User_name = (string)dr["user_name"];
+                    c.Parent_comment_id = (int)dr["parent_comment_id"];
+                    if (c.Parent_comment_id == 0)
+                        c.Parent_comment_id = null;
+                    c.Content = (string)dr["content"];
+                    c.Date_created = (DateTime)dr["date_created"];
+                    c.Upvote_count = (int)dr["numOfLikes"];
+                    if ((string)dr["UserUpvoted"] == "true")
+                        c.UserUpvoted = true;
+                    else
+                        c.UserUpvoted = false;
+
+                    episode_comments.Add(c);
+                }
+
+                return episode_comments;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // Builds a delete command to the SQL.
+        //--------------------------------------------------------------------------------------------------
+        private void BuildDeleteCommand(SqlCommand cmd, object o)
+        {
+            string commandText = "DELETE FROM ";
+
+            if (o is Upvote)
+            {
+                Upvote u = (Upvote)o;
+
+                commandText += "TheMovieDB_Comments_Upvotes_2021 " +
+                    "WHERE comment_id = " + u.Comment_id + " and user_id= " + u.Upvoter_id;
+            }
+            cmd.CommandText = commandText;
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // Deletes a given object from the SQL DB.
+        //--------------------------------------------------------------------------------------------------
+        public int Delete(Upvote u)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);// write to log
+            }
+
+            cmd = CreateCommand(con); // create the command
+            BuildDeleteCommand(cmd, u); // Append fields to insert command.
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (SqlException sx)
+            {
+                switch (sx.Number)
+                {
+                    case 2627: // Ignore dupe / unique key errors.
+                    case 2601:
+                        return 0; // Cannot add the series.
+                    default:
+                        throw (sx);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex); // write to log
+            }
+
+            finally
+            {
+                if (con != null)
+                    con.Close();// close the db connection
+            }
+
         }
 
     } // End of class definition - DataServices.

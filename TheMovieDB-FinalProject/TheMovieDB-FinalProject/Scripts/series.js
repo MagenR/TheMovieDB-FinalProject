@@ -306,7 +306,6 @@ function addEpisodePreference() {
     function renderTvSection(tv) {
         $('#header_section').css('background', 'linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8) ), url(' + imagePath + tv.backdrop_path + ')');
         $('#header_section').css('background-size', 'cover');
-        /* $('#navbarSeries').append(tv.name); */
         $('#header').append(tv.name + "<br>");
         $('#overview').append(tv.overview);
         $('#backdrop_path').append('<img class="img-fluid rounded-3 my-5" src="' + imagePath + tv.poster_path + '"/>');
@@ -320,21 +319,7 @@ function addEpisodePreference() {
     function renderSeasonsList(tv) {
         seasons = tv.seasons;
         var posterPath = null;
-        /*
-        for (let i = seasons[0].season_number; i < seasons.length; i++) {
 
-            posterPath = seasons[i].poster_path;
-            if (posterPath == null)
-                posterPath = '../Images/placeholder-vertical.jpg';
-            else
-                posterPath = imagePath + posterPath;
-
-            $("#season").append('<div class="col-4 col-md-2 py-2 tvPoster">'
-                + '<img class="img-fluid seasons rounded shadow" src="' + posterPath + '" data-seasonNum="' + i + '"/>'
-                + '<h5>' + seasons[i].name + '</h5>'
-                + '</div>');
-        }
-        */
         seasons.forEach(function (season) {
             posterPath = season.poster_path;
             if (posterPath == null)

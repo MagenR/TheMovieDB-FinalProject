@@ -161,6 +161,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PreferencesController.cs" />
     <Compile Include="Controllers\SeriesController.cs" />
+    <Compile Include="Controllers\UpvotesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -186,7 +187,6 @@
     <Content Include="CSS\main.css" />
     <Content Include="CSS\series.css" />
     <Content Include="CSS\user.css" />
-    <Content Include="CSS\view.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -195,13 +195,11 @@
     <Content Include="Images\profile-placeholder.jpg" />
     <Content Include="Pages\admin.html" />
     <Content Include="Pages\episode.html" />
-    <Content Include="Pages\insert.html" />
     <Content Include="Pages\main.html" />
     <Content Include="CSS\person.css" />
     <Content Include="Pages\person.html" />
     <Content Include="Pages\series.html" />
     <Content Include="Pages\user.html" />
-    <Content Include="Pages\view.html" />
     <Content Include="Scripts\admin.js" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -240,7 +238,6 @@
     <Content Include="Scripts\series.js" />
     <Content Include="Scripts\user.js" />
     <Content Include="Scripts\userLogin.js" />
-    <Content Include="Scripts\view.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

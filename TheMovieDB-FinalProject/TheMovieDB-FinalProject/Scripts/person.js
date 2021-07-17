@@ -57,26 +57,6 @@ $(document).ready(function () {
 
     }
 
-    // Person in movies ----------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- GET -------------------------------------
-        //function getPersonMovies(personId) {
-        //    let apiCall = url + "3/person/" + personId + "/movie_credits?" + "api_key=" + key;
-
-        //    ajaxCall("GET", apiCall, "", getPersonInMovieSuccessCB, getErrorCB);
-        //}
-
-        //function getPersonInMovieSuccessCB(movie) {
-        //    movies = movie.cast
-        //    for (let i = 0; i < movies.length; i++) {
-        //        $('#tab').append('<img class="card" src="' + imagePath + movies[i].poster_path + '"/>');
-        //    }
-        //}
-
-    }
-
     // Person in Tv --------------------------------------------------------------------------
 
     {

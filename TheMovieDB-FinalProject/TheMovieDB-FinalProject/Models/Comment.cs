@@ -16,6 +16,7 @@ namespace TheMovieDB.Models
         string content, user_name;
         DateTime date_created;
         string profilePictureURL;
+        bool userUpvoted;
 
         // Props ----------------------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ namespace TheMovieDB.Models
         public string User_name { get => user_name; set => user_name = value; }
         public DateTime Date_created { get => date_created; set => date_created = value; }
         public string ProfilePictureURL { get => "../uploadedFiles/" + User_id + ".png"; }
+        public bool UserUpvoted { get => userUpvoted; set => userUpvoted = value; }
 
         //Constructors ----------------------------------------------------------------------------
 
@@ -46,6 +48,7 @@ namespace TheMovieDB.Models
             return 0; // Failure adding.
         }
 
+        // Insert upvote for comment.
         public int InsertUpvote(Comment c, int upvoter_id)
         {
             DataServices ds = new DataServices();
@@ -59,8 +62,14 @@ namespace TheMovieDB.Models
             List<Comment> cList = ds.GetCommentsList(tv_id, season_number, episode_number);
             return cList;
         }
+        
+        // Gets comment list for given episode and user.
+        public List<Comment> GetCommentsList(int tv_id, int season_number, int episode_number, int user_id)
+        {
+            DataServices ds = new DataServices();
+            List<Comment> cList = ds.GetCommentsList(tv_id, season_number, episode_number, user_id);
+            return cList;
+        }
     }
-
-
 
 }

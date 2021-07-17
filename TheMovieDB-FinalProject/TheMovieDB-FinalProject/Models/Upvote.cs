@@ -20,13 +20,22 @@ namespace TheMovieDB.Models
 
         //Methods ---------------------------------------------------------------------------------
 
-        // Inserts this comment to the database.
+        // Inserts this upvote to the database.
         public int Insert()
         {
             DataServices ds = new DataServices();
             if (ds.Insert(this) != 0)
                 return 1; // Success adding.
             return 0; // Failure adding.
+        }
+        
+        // Deletes this upvote to the database.
+        public int Delete()
+        {
+            DataServices ds = new DataServices();
+            if (ds.Delete(this) != 0)
+                return 1; // Success deleting.
+            return 0; // Failure deleting
         }
     }
 }

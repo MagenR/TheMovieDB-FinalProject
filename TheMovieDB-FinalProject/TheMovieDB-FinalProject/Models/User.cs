@@ -45,19 +45,21 @@ namespace TheMovieDB.Models
             return 0; // Failure adding.
         }
 
-        // Returns the user.
+        // Returns the user, given email and password.
         public User Get(string email, string password)
         {
             DataServices ds = new DataServices();
             return ds.GetUser(email, password);
         }
 
+        // Returns the user, given id.
         public User Get(int id)
         {
             DataServices ds = new DataServices();
             return ds.GetUser(id);
         }
 
+        // get list of all users in the DB.
         public List<User> GetUsersList()
         {
             DataServices ds = new DataServices();

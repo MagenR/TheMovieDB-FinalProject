@@ -177,6 +177,29 @@
         </div>
     </nav>
 
+    <!-- Episode Modal -->
+    <div class="modal fade" id="episodeModal" tabindex="-1" aria-labelledby="episodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="episodeModalLabel">Episode Title</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body container">
+                    <img class="img-fluid mb-3" src="" />
+                    <h5>Air date:</h5>
+                    <p class="air-date"></p>
+                    <h5>Overview:</h5>
+                    <p class="episode-overview"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="DiscussEpisodeBtn">Discuss Episode</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header class="py-5">
     </header>
 
@@ -239,7 +262,13 @@
     </div>
 
     <!-- Footer -->
-    <footer class="py-5">
+    <footer class="bg-dark py-4 mt-auto">
+        <div class="container px-5">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Final Project &copy; Ruppin AC 2021 </div>
+                <div class="text-muted"> Magen Rosenwasser &amp; Shay Mautner </div>
+            </div>
+        </div>
     </footer>
 
     <!-- Bootstrap dependencies -->

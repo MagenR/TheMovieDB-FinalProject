@@ -28,6 +28,24 @@ namespace TheMovieDB.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/Comments/Upvoted")]
+        public HttpResponseMessage Get(int tvid, int season_number, int episode_number, int user_id)
+        {
+            try
+            {
+                Comment c = new Comment();
+                List<Comment> cl = c.GetCommentsList(tvid, season_number, episode_number, user_id);
+                if (cl == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No Comments.");
+                return Request.CreateResponse(HttpStatusCode.OK, cl);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
+            }
+        }
+
         // GET api/<controller>/5
         public string Get(int id)
         {
@@ -48,21 +66,6 @@ namespace TheMovieDB.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
             }
         }
-        [HttpPost]
-        [Route("api/Comments/Upvote")]
-        public HttpResponseMessage PostUpvote([FromBody] Upvote u)
-        {
-            try
-            {
-                if (u.Insert() == 0)
-                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Cannot add upvote to this comment.");
-                return Request.CreateResponse(HttpStatusCode.OK, u);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
-            }
-        }
 
         // PUT api/<controller>/5
         public void Put(int id, [FromBody] string value)
@@ -70,9 +73,8 @@ namespace TheMovieDB.Controllers
         }
 
         // DELETE api/<controller>/5
-        public void DeleteUpvote(int user_id, int comment_id)
+        public void Delete(int id)
         {
-
         }
     }
 }
