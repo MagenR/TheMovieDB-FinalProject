@@ -121,6 +121,7 @@ function appendUserData(user) {
 }
 
 function uploadImg() {
+    location.reload();
     var data = new FormData();
     var files = $('#profilePicInput').get(0).files;
     data.append('UploadedImage', files[0]);
@@ -173,7 +174,7 @@ function initOwl() {
                 items: 4
             },
             1000: {
-                items: 6
+                items: 5
             }
         }
     });

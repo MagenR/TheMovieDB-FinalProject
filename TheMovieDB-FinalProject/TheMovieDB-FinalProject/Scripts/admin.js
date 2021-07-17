@@ -250,7 +250,7 @@ function renderEpisodes(episodes) {
 
 function renderText(choice){
 
-    var LoggedInName;
+    var LoggedInName = logged_user.First_name + " " + logged_user.Last_name;
     var MainHeading;
     var MainText;
     var TableName;
@@ -279,4 +279,5 @@ function renderText(choice){
     $('#MainHeading').html(MainHeading);
     $('#MainText').html(MainText);
     $('#TableName').html('<i class="fas fa-table me-1"></i>' + TableName);
+    $('#LoggedInName').append(LoggedInName);
 }

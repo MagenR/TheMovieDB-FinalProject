@@ -118,59 +118,54 @@
     </div>
 
     <main class="flex-shrink-0">
-        <!-- Navigation-->
+        <!-- navbar -->
         <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
             <div class="container px-5">
-                <a class="navbar-brand" id="navbarSeries" href="main.html">My Series List</a>
+                <a class="navbar-brand" href="main.html">My Series List</a>
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        data-bs-target="#toggleMobileMenu"
+                        aria-controls="toggleMobileMenu"
+                        aria-label="toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="collapse navbar-collapse" id="toggleMobileMenu">
 
-                <!--<div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="#cast_section">Cast</a>
+                            <a class="nav-link" href="main.html?category=tv">TV Series</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#seasons_section">Seasons</a>
+                            <a class="nav-link" href="main.html?category=actors">Actors</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#videos_section">Videos</a>
+                            <a class="nav-link" href="admin.html">Admin Page</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#reviews_section">Reviews</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#similarTv_section">Recommendations</a>
-                        </li>
-                    </ul>-->
+                    </ul>
 
-                <ul class="navbar-nav ms-auto" id="signupLogin">
-                    <li class="nav-item">
-                        <a class="nav-link" id="signUpBtn" href="#" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="logInBtn" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Log in</a>
-                    </li>
-                </ul>
+                    <ul class="navbar-nav ms-auto" id="signupLogin">
+                        <li class="nav-item">
+                            <a class="nav-link" id="signUpBtn" href="#" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="logInBtn" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Log in</a>
+                        </li>
+                    </ul>
 
-                <ul class="navbar-nav ms-auto" id="loggedIn">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="logInDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" id="loggedIn" aria-labelledby="navbarDarkDropdownMenuLink">
-                            <li><a class="dropdown-item profile" href="#">My profile</a></li>
-                            <li><a class="dropdown-item" id="logOutBtn" href="#">Log Out</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                    <ul class="navbar-nav ms-auto" id="loggedIn">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="logInDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" id="loggedIn" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item profile" href="#">My profile</a></li>
+                                <li><a class="dropdown-item" id="logOutBtn" href="#">Log Out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
             </div>
         </nav>
 
