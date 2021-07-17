@@ -22,7 +22,7 @@ $(document).ready(function () {
     $('#uploadProfilePic').click(uploadImg);
 
     $('#seriesPanel').on('click', '.seriesTv', function () {
-        getEpisodes($(this).attr('data-seriesid'));
+        getEpisodesUser($(this).attr('data-seriesid'));
     });
 
 });
@@ -70,7 +70,7 @@ $(document).ready(function () {
 
         function getEpisodesUser(tv_id) {
             let api = "../api/Episodes?user_id=" + userId + "&tv_id=" + tv_id;
-            ajaxCall("GET", api, "", getEpisodesSuccessCB, getErrorCB);
+            ajaxCall("GET", api, "", getEpisodesUserSuccessCB, getErrorCB);
         }
 
         function getEpisodesUserSuccessCB(episodes) {
@@ -82,7 +82,7 @@ $(document).ready(function () {
     // ----------------------------------------- Error ------------------------------------------
 
     function getErrorCB(err) {
-        console.log(err);
+        console.log("Error Status: " + err.status + " Message: " + err.responseJSON.Message)
     }
 
 }

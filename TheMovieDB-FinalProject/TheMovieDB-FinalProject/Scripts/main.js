@@ -168,7 +168,7 @@ $(document).ready(function () {
     // Error call back -----------------------------------------------------------------------
 
     function getErrorCB(err) {
-        console.log("Error Status: " + err.status + " Message: " + err.Message);
+        console.log("Error Status: " + err.status + " Message: " + err.responseJSON.Message)
     }
 
 } // End of 'API calls'.

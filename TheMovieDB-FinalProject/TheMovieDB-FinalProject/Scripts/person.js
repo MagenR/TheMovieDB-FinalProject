@@ -16,6 +16,12 @@ $(document).ready(function () {
         $targetId = $(this).data('seriesid');
         window.location.href = "series.html?id=" + $targetId;
     });
+
+    $('li .profile').click(function () {
+        $logged_user = JSON.parse(localStorage.getItem('user'));
+        window.location.href = "user.html?id=" + $logged_user.User_id;
+    });
+
 });
 
 // ---------------------------------------- API calls ---------------------------------------------
@@ -101,7 +107,7 @@ $(document).ready(function () {
     // Error call back -----------------------------------------------------------------------
 
     function getErrorCB(err) {
-        console.log("Error Status: " + err.status + " Message: " + err.Message);
+        console.log("Error Status: " + err.status + " Message: " + err.responseJSON.Message)
     }
 
 } // End of 'API calls'.

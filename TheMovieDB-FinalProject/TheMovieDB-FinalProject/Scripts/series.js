@@ -41,6 +41,11 @@ $(document).ready(function () {
         $('#episodeModal').modal('show');
     });
 
+    $('li .profile').click(function () {
+        $logged_user = JSON.parse(localStorage.getItem('user'));
+        window.location.href = "user.html?id=" + $logged_user.User_id;
+    });
+
     $('#SaveEpisodeBtn').click(addEpisodePreference);
 
 });
