@@ -263,6 +263,7 @@ function renderPeople(location, source, tot) {
 }
 
 function printPagination() {
+    $('#paginationNavigation').html("");
     if (total_pages > 1) {
         paginationStr =
             '<nav>' +
