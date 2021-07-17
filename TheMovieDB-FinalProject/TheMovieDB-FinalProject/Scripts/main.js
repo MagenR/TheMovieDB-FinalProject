@@ -286,7 +286,10 @@ function printPagination() {
                 '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
                 '<a class= "page-link" href ="#">' + pageNum + '</a>' +
                 '</li>';
-            for (let i = pageNum + 1; i <= 10; i++) {
+            if (total_pages > 10)
+                total = 10;
+            else total = total_pages;
+            for (let i = pageNum + 1; i <= total; i++) {
                 paginationStr +=
                     '<li class="page-item paginationBtn" data-page="' + i + '">' +
                     '<a class= "page-link" href ="#">' + i + '</a>' +
