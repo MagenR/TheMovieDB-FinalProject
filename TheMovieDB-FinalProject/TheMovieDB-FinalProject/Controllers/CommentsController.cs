@@ -41,7 +41,22 @@ namespace TheMovieDB.Controllers
             {
                 if (c.Insert() == 0)
                     return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Cannot add the comment to the database.");
-                return Request.CreateResponse(HttpStatusCode.OK, "Comment was succesfully posted.");
+                return Request.CreateResponse(HttpStatusCode.OK, c);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
+            }
+        }
+        [HttpPost]
+        [Route("api/Comments/Upvote")]
+        public HttpResponseMessage PostUpvote([FromBody] Upvote u)
+        {
+            try
+            {
+                if (u.Insert() == 0)
+                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Cannot add upvote to this comment.");
+                return Request.CreateResponse(HttpStatusCode.OK, u);
             }
             catch (Exception ex)
             {
@@ -55,8 +70,9 @@ namespace TheMovieDB.Controllers
         }
 
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        public void DeleteUpvote(int user_id, int comment_id)
         {
+
         }
     }
 }

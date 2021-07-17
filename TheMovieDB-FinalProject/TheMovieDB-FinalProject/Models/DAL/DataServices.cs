@@ -160,7 +160,20 @@ namespace TheMovieDB.Models.DAL
                 cmd.Parameters.AddWithValue("@content", c.Content);
 
                 cmd.Parameters.Add("@date_created", SqlDbType.DateTime);
-                cmd.Parameters["@date_created"].Value = (c.Date_created).ToString("yyyy-MM-dd");
+                cmd.Parameters["@date_created"].Value = (c.Date_created);
+            }
+            else if (o is Upvote)
+            {
+                Upvote u = (Upvote)o;
+                commandText += "TheMovieDB_Comments_Upvotes_2021 " +
+                    "values(@comment_id, @user_id";
+                cmd.CommandText = commandText;
+
+                cmd.Parameters.Add("@comment_id", SqlDbType.Int);
+                cmd.Parameters["@comment_id"].Value = u.Comment_id;
+
+                cmd.Parameters.Add("@user_id", SqlDbType.Int);
+                cmd.Parameters["@user_id"].Value = u.Upvoter_id;
             }
 
         }

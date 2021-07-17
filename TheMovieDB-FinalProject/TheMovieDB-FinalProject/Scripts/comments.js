@@ -1,21 +1,18 @@
-﻿
-commentsArray = [{
-    id: 1,
-    profile_picture_url: profilePicPath,
-    created: '2015-10-01',
-    content: 'Lorem ipsum dolort sit amet',
-    fullname: 'Simon Powell',
-    upvote_count: 2,
-    user_has_upvoted: false
-}];
-
+﻿userId = 0;
+profilePicPath = '../Images/profile - placeholder.jpg';
 function initComments() {
-    var profilePicPath = '../uploadedFiles/' + logged_user.User_id + '.png';
+    if (logged_user != null) {
+        var profilePicPath = '../uploadedFiles/' + logged_user.User_id + '.png';
+        userId = logged_user.User_id;
+    }
+    
 
     $('#comments-container').comments({
         profilePictureURL: profilePicPath,
-        currentUserId: logged_user.User_id,
+        currentUserId: userId,
         roundProfilePictures: true,
+        enablePinging: false,
+        readOnly: (logged_user == null),
         fieldMappings: {
             id: 'Comment_id',
             parent: 'Parent_comment_id',
@@ -37,6 +34,7 @@ function initComments() {
                 //dataType: 'json',
                 success: function (commentsArray) {
                     success(commentsArray)
+                    console.log("Comments got");
                 },
                 error: getErrorCB
             });
@@ -59,26 +57,31 @@ function initComments() {
                 type: 'post',
                 url: '../api/Comments/',
                 data: commentToAdd,
-                success: function (comment) {
-                    success(comment)
+                success: function (data) {
+                    //success(location.reload())
+                    data.User_name = logged_user.First_name + ' ' + logged_user.Last_name
+                    success(data)
+
                 },
                 error: getErrorCB
             });
         },
 
         // Upvote comment, save to the db.
-        /*
+        
         upvoteComment: function (commentJSON, success, error) {
             var commentURL = '../api/Comments/' + commentJSON.id;
             var upvotesURL = commentURL + '/upvotes/';
 
-            if (commentJSON.userHasUpvoted) {
+            var upvote = {
+                Comment_id: commentJSON.Comment_id,
+                Upvoter_id: logged_user.User_id
+            }
+            if (commentJSON.user_has_upvoted) {
                 $.ajax({
                     type: 'post',
-                    url: upvotesURL,
-                    data: {
-                        comment: commentJSON.id
-                    },
+                    url: '../api/Comments/Upvote',
+                    data: upvote,
                     success: function () {
                         success(commentJSON)
                     },
@@ -95,7 +98,7 @@ function initComments() {
                 });
             }
         }
-        */
+        
 
     }); 
 } // End of "initComments".

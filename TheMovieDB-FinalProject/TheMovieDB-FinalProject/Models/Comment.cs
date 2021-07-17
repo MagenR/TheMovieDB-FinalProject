@@ -46,6 +46,12 @@ namespace TheMovieDB.Models
             return 0; // Failure adding.
         }
 
+        public int InsertUpvote(Comment c, int upvoter_id)
+        {
+            DataServices ds = new DataServices();
+            return InsertUpvote(c, upvoter_id);
+        }
+
         // Gets comment list for given episode.
         public List<Comment> GetCommentsList(int tv_id, int season_number, int episode_number)
         {

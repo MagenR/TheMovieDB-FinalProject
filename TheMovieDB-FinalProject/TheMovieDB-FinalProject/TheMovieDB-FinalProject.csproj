@@ -171,6 +171,7 @@
     <Compile Include="Models\Episode.cs" />
     <Compile Include="Models\Preference.cs" />
     <Compile Include="Models\Series.cs" />
+    <Compile Include="Models\Upvote.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -227,6 +228,7 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\comments.js" />
     <Content Include="Scripts\episode.js" />
+    <Content Include="Scripts\jquery-comments.js" />
     <Content Include="Scripts\jquery-comments.min.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

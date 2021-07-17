@@ -43,6 +43,7 @@ $(document).ready(function () {
 
         function getUserSuccessCB(user) {
             logIn(user);
+            location.reload();
         }
 
         function getUserErrorCB(err) {
