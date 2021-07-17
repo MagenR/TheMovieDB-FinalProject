@@ -175,6 +175,7 @@ $(document).ready(function () {
 
         function getSearchResultsSuccessCB(SearchResults) {
             total_pages = SearchResults.total_pages;
+            pageNum = 1;
             printPagination();
             $('#ph').html('<div class="row search"></div>');
             $('#ph .search').append("<h4>Search Results</h4>");
@@ -292,7 +293,7 @@ function printPagination() {
                     '</li>';
             }
         }
-        else if (pageNum < total_pages - 5) {
+        else if (pageNum <= total_pages - 5) {
             for (let i = pageNum - 5; i < pageNum; i++) {
                 paginationStr +=
                     '<li class="page-item paginationBtn" data-page="' + i + '">' +
@@ -328,7 +329,6 @@ function printPagination() {
                     '</li>';
             }
         }
-
         paginationStr +=
             '<li class="page-item nextPaginationBtn">' +
             '<a class="page-link" href="#">Next</a>' +
@@ -345,7 +345,7 @@ function checkPageNum() {
         pageNum = 1;
         $('.prevPaginationBtn').addClass("page-item prevPaginationBtn disabled");
     }
-    if (pageNum == total_pages) 
+    if (pageNum == total_pages)
         $('.nextPaginationBtn').addClass("page-item nextPaginationBtn disabled");
 }
 
