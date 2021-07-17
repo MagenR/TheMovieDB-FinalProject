@@ -234,6 +234,52 @@ namespace TheMovieDB.Models.DAL
             }
         }
 
+        public User GetUser(int id)
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR = "SELECT * FROM TheMovieDB_Users_2021 as u WHERE u.user_id = '" + id + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                if (dr.HasRows == false) // no record returned.
+                    return null; // if no user found.
+
+                User u = new User();
+                dr.Read();
+                u.User_id = (int)dr["user_id"];
+                u.First_name = (string)dr["first_name"];
+                u.Last_name = (string)dr["last_name"];
+                u.Email = (string)dr["email"];
+                u.Address = (string)dr["address"];
+                u.Phone_num = (string)dr["phone_num"];
+                u.Birth_date = (DateTime)dr["birth_date"];
+                u.Gender = ((string)dr["gender"])[0];
+                u.Password = (string)dr["password"];
+                u.Fav_genre = (string)dr["fav_genre"];
+                return u;
+
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
         //--------------------------------------------------------------------------------------------------
         // Get list of all users in db.
         //--------------------------------------------------------------------------------------------------

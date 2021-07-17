@@ -156,6 +156,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\EpisodesController.cs" />
+    <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PreferencesController.cs" />
     <Compile Include="Controllers\SeriesController.cs" />
@@ -180,18 +181,21 @@
     <Content Include="CSS\admin.css" />
     <Content Include="CSS\main.css" />
     <Content Include="CSS\series.css" />
+    <Content Include="CSS\user.css" />
     <Content Include="CSS\view.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\no-image.png" />
     <Content Include="Images\placeholder-vertical.jpg" />
+    <Content Include="Images\profile-placeholder.jpg" />
     <Content Include="Pages\admin.html" />
     <Content Include="Pages\insert.html" />
     <Content Include="Pages\main.html" />
     <Content Include="CSS\person.css" />
     <Content Include="Pages\person.html" />
     <Content Include="Pages\series.html" />
+    <Content Include="Pages\user.html" />
     <Content Include="Pages\view.html" />
     <Content Include="Scripts\admin.js" />
     <Content Include="Scripts\ajaxCalls.js" />
@@ -225,6 +229,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\person.js" />
     <Content Include="Scripts\series.js" />
+    <Content Include="Scripts\user.js" />
     <Content Include="Scripts\userLogin.js" />
     <Content Include="Scripts\view.js" />
     <Content Include="Web.config" />
@@ -244,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="uploadedFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

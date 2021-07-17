@@ -28,6 +28,22 @@ namespace TheMovieDB.Controllers
             }
         }
 
+        public HttpResponseMessage Get(int id)
+        {
+            try
+            {
+                User u = new User();
+                u = u.Get(id);
+                if (u == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No User with such id.");
+                return Request.CreateResponse(HttpStatusCode.OK, u);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
+            }
+        }
+
 
         // GET api/<controller>/5
         public HttpResponseMessage Get(string email, string password)
