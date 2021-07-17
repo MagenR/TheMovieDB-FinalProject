@@ -3,6 +3,12 @@ url = "https://api.themoviedb.org/";
 imagePath = "https://image.tmdb.org/t/p/w500";
 youtubeUrl = "https://www.youtube.com/embed/";
 
+series = "";
+seasonNum = "";
+episodeNum = "";
+episode = "";
+tvId = "";
+
 $(document).ready(function () {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -12,6 +18,7 @@ $(document).ready(function () {
     initOwl();
 
     $('#season').on('click', '.seasons', function () {
+        seasonNum = $(this).attr('data-seasonNum');
         getSeason($(this).attr('data-seasonNum'));
         window.location.href = "#episodes";
     });
@@ -22,9 +29,16 @@ $(document).ready(function () {
     });
 
     $('#episodes').on('click', '.episode', function () {
+        episodeNum = $(this).data('episodenum');
         getEpisode($(this).data('seasonnum'), $(this).data('episodenum'));
+        if (logged_user == null)
+            $('#SaveEpisodeBtn').hide();
+        else
+            getCheckPreference(tvId, $(this).data('seasonnum'), $(this).data('episodenum'));
         $('#episodeModal').modal('show');
     });
+
+    $('#SaveEpisodeBtn').click(addEpisodePreference);
 
 });
 
@@ -45,6 +59,7 @@ $(document).ready(function () {
         }
 
         function getTvSuccessCB(tv) {
+            series = tv;
             document.title = tv.name;
             renderTvSection(tv);
             renderSeasonsList(tv);
@@ -54,6 +69,30 @@ $(document).ready(function () {
             getVideos();
             getSimilarTv();
             */
+        }
+
+        //--------------------------------------- POST --------------------------------------
+
+        function postTv() { // Shay
+
+            tv_series = {
+                tv_id: series.id,
+                first_air_date: series.first_air_date,
+                name: series.name,
+                origin_country: series.origin_country[0],
+                original_language: series.original_language,
+                overview: series.overview,
+                popularity: series.popularity,
+                poster_path: series.poster_path
+            }
+
+            let api = "../api/Series";
+
+            ajaxCall("POST", api, JSON.stringify(tv_series), postSeriesSuccessCB, getErrorCB);
+        }
+
+        function postSeriesSuccessCB(msg) {
+            console.log(msg);  
         }
 
     }
@@ -97,13 +136,80 @@ $(document).ready(function () {
     {
         //--------------------------------------- GET -------------------------------------
 
-        function getEpisode(seasonNum, episodeNum) {
+        function getEpisode(seasonNum, episodeNum) { 
             let apiCall = url + "3/tv/" + tvId + "/season/" + seasonNum + "/episode/" + episodeNum + "?" + "api_key=" + key;
             ajaxCall("GET", apiCall, "", getEpisodeSuccessCB, getErrorCB)
         }
 
-        function getEpisodeSuccessCB(episode) {
+        function getEpisodeSuccessCB(episodeGet) {
+            episode = episodeGet;
             renderEpisodeModal(episode);
+        }
+
+        //--------------------------------------- POST ------------------------------------
+
+        function postEpisode() {
+
+            let episodePost = {
+                Tv_id: tvId,
+                Season_number: episode.season_number,
+                Episode_number: episode.episode_number,
+                Episode_name: episode.name,
+                Still_path: episode.still_path,
+                Overview: episode.overview,
+                Air_date: episode.air_date
+            }
+
+            let api = "../api/Episodes";
+
+            ajaxCall("POST", api, JSON.stringify(episodePost), postEpisodeSuccessCB, getErrorCB);
+        }
+
+        function postEpisodeSuccessCB(msg) {
+            console.log(msg);
+        }
+
+    }
+
+    // Preference -------------------------------------------------------------------------
+
+    {
+        // -------------------------------------- GET -------------------------------------
+        function getCheckPreference(tvId, seasonNum, episodeNum) {
+
+            let api = "../api/Preferences/Get";
+            api += "?user_id=" + logged_user.User_id + "&series_id=" + tvId + "&season_id=" + seasonNum + "&episode_id=" + episodeNum;
+            ajaxCall("GET", api, "", getCheckPreferenceSuccessCB, getCheckPreferenceErrorCB);
+        }
+
+        function getCheckPreferenceSuccessCB() {
+            $('#SaveEpisodeBtn').hide();
+        }
+
+        function getCheckPreferenceErrorCB(err) {
+            if (err.status == '404')
+                $('#SaveEpisodeBtn').show();  
+            getErrorCB(err);
+        }
+
+        //--------------------------------------- POST ------------------------------------
+
+        function postPreference() {
+
+            let preference = {
+                UserPreference: logged_user,
+                EpisodePreference: episode
+            }
+
+            let api = "../api/Preferences";
+
+            ajaxCall("POST", api, JSON.stringify(preference), postPreferenceSuccessCB, getErrorCB);
+        }
+
+        function postPreferenceSuccessCB(msg) {
+            console.log(msg);
+            swal("Success!", msg, "success");
+            $('#episodeModal').modal('hide');
         }
 
     }
@@ -126,80 +232,10 @@ $(document).ready(function () {
 
     }
 
-    // Reviews -----------------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- GET -------------------------------------
-        function getReviews() {
-            let apiCall = url + "3/tv/" + tvId + "/reviews?" + "api_key=" + key;
-
-            ajaxCall("GET", apiCall, "", getReviewsSuccessCB, getErrorCB);
-        }
-
-        function getReviewsSuccessCB(reviews) {
-            reviewsList = reviews.results;
-
-            try {
-                tbl = $('#reviewsTable').DataTable({
-                    data: reviewsList,
-                    pageLength: 5,
-                    columns: [
-                        { data: "author" },
-                        { data: "content" },
-                        { data: "created_at" },
-                        { data: "updated_at" },
-                    ],
-                });
-            }
-            catch (err) {
-                alert(err);
-            }
-        }
-
-    }
-
-    // Videos ------------------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- GET -------------------------------------
-        function getVideos() {
-            let apiCall = url + "3/tv/" + tvId + "/videos?" + "api_key=" + key;
-
-            ajaxCall("GET", apiCall, "", getVideosSuccessCB, getErrorCB);
-        }
-
-        function getVideosSuccessCB(video) {
-            videos = video.results;
-            renderVideos(video);
-        }
-
-    }
-
-    // Similar Tv Shows --------------------------------------------------------------------------
-
-    {
-
-        //--------------------------------------- GET -------------------------------------
-
-        function getSimilarTv() {
-            let apiCall = url + "3/tv/" + tvId + "/similar?" + "api_key=" + key;
-
-            ajaxCall("GET", apiCall, "", getSimilarSuccessCB, getErrorCB);
-        }
-
-        function getSimilarSuccessCB(similar) {
-            similarTv = similar.results;
-            renderSimilarTv(similarTv);
-        }
-
-    }
-
     // Error call back ---------------------------------------------------------------------------
 
     function getErrorCB(err) {
-        console.log("Error Status: " + err.status + " Message: " + err.Message);
+        console.log("Error Status: " + err.status + " Message: " + err.responseJSON.Message);
     }
 
 }
@@ -232,6 +268,12 @@ function buildCast(cast) {
     }
 }
 
+function addEpisodePreference() {
+    postTv();
+    postEpisode();
+    postPreference();
+}
+
 // Renders-----------------------------------------------------------------------------------
 
 {
@@ -251,7 +293,7 @@ function buildCast(cast) {
     }
 
     function renderSeasonsList(tv) {
-        var seasons = tv.seasons;
+        seasons = tv.seasons;
         var posterPath = null;
         /*
         for (let i = seasons[0].season_number; i < seasons.length; i++) {
@@ -283,8 +325,8 @@ function buildCast(cast) {
 
     }
 
-    function renderEpisodes(season) {       
-        var episodes = season.episodes;
+    function renderEpisodes(season) {
+        episodes = season.episodes;
         var posterPath = null;
 
         $('#episodes').html('<h4>' + season.name + ' Episodes: </h4>');
@@ -298,7 +340,7 @@ function buildCast(cast) {
             else
                 posterPath = imagePath + posterPath;
 
-            $("#episodes").append('<div class="col-4 col-md-2 py-2 episode tvPoster" data-seasonNum="' + season.season_number + '" data-episodeNum="' + episodes[i].episode_number  + '">'
+            $("#episodes").append('<div class="col-4 col-md-2 py-2 episode tvPoster" data-seasonNum="' + season.season_number + '" data-episodeNum="' + episodes[i].episode_number + '">'
                 + '<img class="img-fluid popular rounded shadow" src="' + posterPath + '"/>'
                 + '<h5> Episode ' + (i + 1) + ': ' + episodes[i].name + '</h5>'
                 + '</div>');
@@ -328,30 +370,5 @@ function buildCast(cast) {
         $('#episodeModal .modal-body .air-date').html(episode.air_date);
         $('#episodeModal .modal-body .episode-overview').html(episode.overview);
     }
-    /*
-    function renderVideos(videos) {
-        $('#videos').append('<div class="row tvSeasons"><h4>Videos:</h4 ></div>');
-        for (let i = 0; i < videos.length; i++)
-            $('#videos').append('<iframe width="400" height="300" src="' + youtubeUrl + videos[i].key + '"></iframe>');
-    }
-
-    function renderSimilarTv(similarTv) {
-        $('#similarTv').append('<div class="row Recommendations"><h4>Recommendations:</h4 ></div >');
-        var posterPath = null;
-        for (let i = 0; i < similarTv.length; i++) {
-
-            posterPath = similarTv[i].poster_path;
-            if (posterPath == null)
-                posterPath = '../Images/placeholder-vertical.jpg';
-            else
-                posterPath = imagePath + posterPath;
-
-            $("#similarTv .Recommendations").append('<div class="col-4 col-md-2 py-2 tvPoster">'
-                + '<img class="img-fluid popular rounded shadow" src="' + posterPath + '"/>'
-                + '<h5>' + similarTv[i].name + '<h5>'
-                + '</div>');
-        }
-    }
-    */
 
 }

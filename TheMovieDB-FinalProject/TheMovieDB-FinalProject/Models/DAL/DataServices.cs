@@ -660,6 +660,42 @@ namespace TheMovieDB.Models.DAL
             }
         }
 
+        //--------------------------------------------------------------------------------------------------
+        // Get a specific user's preference, if exists.
+        //--------------------------------------------------------------------------------------------------
+        public bool GetCheckPreference(int user_id, int series_id, int season_id, int episode_id)
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                string selectSTR = "SELECT p.user_id, p.tv_id, p.season_number, p.episode_number " +
+                                   "FROM TheMovieDB_Preferences_2021 as p " +
+                                   "WHERE p.user_id = '" + user_id + "' and p.tv_id = '" + series_id + "' and p.season_number = '" + season_id + "' and p.episode_number = '" + episode_id + "'";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                return dr.HasRows; // True = a record was found, false = no record found -> he can add the episode.
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
     } // End of class definition - DataServices.
 
 }

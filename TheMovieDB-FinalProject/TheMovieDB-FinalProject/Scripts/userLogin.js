@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿logged_user = "";
+
+$(document).ready(function () {
     /*
     $('#accessUserBtn').click(getUser);
     $('#logOutBtn').click(logOut);
@@ -150,6 +152,7 @@ function loadSavedLogIn() {
 function logIn(user) {
     delete user.Password; // Remove password before saving to LS.
     localStorage.setItem('user', JSON.stringify(user));
+    logged_user = JSON.parse(localStorage.getItem('user'));
     /* $("#WlcmMsg").html("Hello, " + user.First_name + " " + user.Last_name + "."); */
     $("#logInDropdown").html(user.First_name + " " + user.Last_name);
     $("#loggedIn").show();
