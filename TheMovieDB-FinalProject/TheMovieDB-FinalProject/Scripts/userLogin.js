@@ -19,9 +19,7 @@ $(document).ready(function () {
         setMaxDate();
     });
 
-    $('#newUser').on('submit', '#signUpBtn', function () {
-        signUp();
-    });
+    $('#newUser').submit(signUp);
 
     loadSavedLogIn();
 

@@ -81,7 +81,7 @@ $(document).ready(function () {
 
         //--------------------------------------- POST --------------------------------------
 
-        function postTv() { // Shay
+        function postTv() { 
 
             tv_series = {
                 tv_id: series.id,
@@ -204,9 +204,15 @@ $(document).ready(function () {
 
         function postPreference() {
 
+            let epPreference = {
+                Tv_id: tvId,
+                Season_number: episode.season_number,
+                Episode_number: episode.episode_number,
+            }
+
             let preference = {
                 UserPreference: logged_user,
-                EpisodePreference: episode
+                EpisodePreference: epPreference
             }
 
             let api = "../api/Preferences";
