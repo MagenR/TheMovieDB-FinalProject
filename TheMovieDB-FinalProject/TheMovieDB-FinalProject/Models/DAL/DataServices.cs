@@ -166,7 +166,7 @@ namespace TheMovieDB.Models.DAL
             {
                 Upvote u = (Upvote)o;
                 commandText += "TheMovieDB_Comments_Upvotes_2021 " +
-                    "values(@comment_id, @user_id";
+                    "values(@comment_id, @user_id)";
                 cmd.CommandText = commandText;
 
                 cmd.Parameters.Add("@comment_id", SqlDbType.Int);
