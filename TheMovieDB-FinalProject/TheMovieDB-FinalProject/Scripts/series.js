@@ -96,11 +96,17 @@ $(document).ready(function () {
 
             let api = "../api/Series";
 
-            ajaxCall("POST", api, JSON.stringify(tv_series), postSeriesSuccessCB, getErrorCB);
+            ajaxCall("POST", api, JSON.stringify(tv_series), postSeriesSuccessCB, postSeriesErrorCB);
         }
 
         function postSeriesSuccessCB(msg) {
-            console.log(msg);  
+            console.log(msg);
+            postEpisode();
+        }
+
+        function postSeriesErrorCB(msg) {
+            getErrorCB(msg)
+            postEpisode();
         }
 
     }
@@ -170,11 +176,16 @@ $(document).ready(function () {
 
             let api = "../api/Episodes";
 
-            ajaxCall("POST", api, JSON.stringify(episodePost), postEpisodeSuccessCB, getErrorCB);
+            ajaxCall("POST", api, JSON.stringify(episodePost), postEpisodeSuccessCB, postEpisodeErrorCB);
         }
 
         function postEpisodeSuccessCB(msg) {
             console.log(msg);
+            postPreference();
+        }
+        function postEpisodeErrorCB(msg) {
+            getErrorCB(msg)
+            postPreference();
         }
 
     }
@@ -284,8 +295,6 @@ function buildCast(cast) {
 
 function addEpisodePreference() {
     postTv();
-    postEpisode();
-    postPreference();
 }
 
 // Renders-----------------------------------------------------------------------------------
