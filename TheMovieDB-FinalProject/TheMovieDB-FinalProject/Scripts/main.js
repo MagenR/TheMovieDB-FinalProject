@@ -30,16 +30,19 @@ $(document).ready(function () {
     $('#paginationNavigation').on('click', '.paginationBtn', function () {
         pageNum = $(this).data('page');
         getSearchPageResults();
+        printPagination();
     });
 
     $('#paginationNavigation').on('click', '.prevPaginationBtn', function () {
         --pageNum;
         getSearchPageResults();
+        printPagination();
     });
 
     $('#paginationNavigation').on('click', '.nextPaginationBtn', function () {
         ++pageNum;
         getSearchPageResults();
+        printPagination();
     });
 
     const queryString = window.location.search;
@@ -61,6 +64,7 @@ $(document).ready(function () {
         urlParam = 'tv'
         apiCallSearch = 'tv';
     }
+
 });
 
 // ---------------------------------------- API calls ---------------------------------------------
@@ -270,20 +274,79 @@ function printPagination() {
             '<li class="page-item prevPaginationBtn">' +
             '<a class="page-link" href="#">Previous</a>' +
             '</li>';
-        for (let i = 0; i < total_pages; i++) {
+        if (pageNum <= 5) {
+            for (let i = (pageNum - pageNum) + 1; i < pageNum; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
             paginationStr +=
-                '<li class="page-item paginationBtn" data-page="' + (i + 1) + '">' +
-                '<a class= "page-link" href ="#">' + (i + 1) + '</a>' +
+                '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
+                '<a class= "page-link" href ="#">' + pageNum + '</a>' +
                 '</li>';
+            for (let i = pageNum + 1; i <= 10; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
         }
+        else if (pageNum < total_pages - 5) {
+            for (let i = pageNum - 5; i < pageNum; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+            paginationStr +=
+                '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
+                '<a class= "page-link" href ="#">' + pageNum + '</a>' +
+                '</li>';
+            for (let i = pageNum + 1; i < pageNum + 5; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+        }
+        else {
+            for (let i = pageNum - 5; i < pageNum; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+            paginationStr +=
+                '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
+                '<a class= "page-link" href ="#">' + pageNum + '</a>' +
+                '</li>';
+            for (let i = pageNum + 1; i <= total_pages; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+        }
+
         paginationStr +=
             '<li class="page-item nextPaginationBtn">' +
             '<a class="page-link" href="#">Next</a>' +
             '</li>' +
             '</ul>' +
             '</nav>';
-
         $('#paginationNavigation').append(paginationStr);
+        checkPageNum();
+    }
 }
 
-} // End of 'Functions'.
+function checkPageNum() {
+    if (pageNum <= 1) {
+        pageNum = 1;
+        $('.prevPaginationBtn').addClass("page-item prevPaginationBtn disabled");
+    }
+    if (pageNum == total_pages) 
+        $('.nextPaginationBtn').addClass("page-item nextPaginationBtn disabled");
+}
+
+ // End of 'Functions'.
