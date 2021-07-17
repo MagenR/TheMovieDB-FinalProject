@@ -5,7 +5,8 @@ key = "d8484ecfbfb906740724a447b5d63b12";
 url = "https://api.themoviedb.org/";
 imagePath = "https://image.tmdb.org/t/p/w500";
 maxResults = 6;
-
+total_pages = "";
+pageNum = 1;
 // ---------------------------------------- Controller functions-----------------------------------
 
 $(document).ready(function () {
@@ -26,6 +27,24 @@ $(document).ready(function () {
         window.location.href = "user.html?id=" + $logged_user.User_id;
     });
 
+    $('#paginationNavigation').on('click', '.paginationBtn', function () {
+        pageNum = $(this).data('page');
+        getSearchPageResults();
+        printPagination();
+    });
+
+    $('#paginationNavigation').on('click', '.prevPaginationBtn', function () {
+        --pageNum;
+        getSearchPageResults();
+        printPagination();
+    });
+
+    $('#paginationNavigation').on('click', '.nextPaginationBtn', function () {
+        ++pageNum;
+        getSearchPageResults();
+        printPagination();
+    });
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     urlParam = urlParams.get('category');
@@ -36,7 +55,7 @@ $(document).ready(function () {
         apiCallSearch = 'person';
         maxResults = 20;
     }
-       
+
     else {
         getTrending();
         getOnAir();
@@ -155,6 +174,32 @@ $(document).ready(function () {
         }
 
         function getSearchResultsSuccessCB(SearchResults) {
+            total_pages = SearchResults.total_pages;
+            pageNum = 1;
+            printPagination();
+            $('#ph').html('<div class="row search"></div>');
+            $('#ph .search').append("<h4>Search Results</h4>");
+            if (urlParam == 'actors')
+                renderPeople("#ph .search", SearchResults, SearchResults.results.length);
+            else
+                renderPosters("#ph .search", SearchResults, SearchResults.results.length);
+        }
+
+    } // End of 'User Search'.
+
+    // User Search Pages---------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getSearchPageResults() {
+            let search = $('#searchBox').val()
+            let apiCall = url + '3/search/' + apiCallSearch + '?api_key=' + key + '&query=' + search + '&page=' + pageNum;
+            ajaxCall("GET", apiCall, "", getSearchPageResultsSuccessCB, getErrorCB)
+        }
+
+        function getSearchPageResultsSuccessCB(SearchResults) {
             $('#ph').html('<div class="row search"></div>');
             $('#ph .search').append("<h4>Search Results</h4>");
             if (urlParam == 'actors')
@@ -198,25 +243,110 @@ $(document).ready(function () {
                 + '<h5>' + source.results[i].name + '<h5>'
                 + '</div>');
         }
+
     }
+}
 
-    function renderPeople(location, source, tot) {
+function renderPeople(location, source, tot) {
 
-        var profilePath = null;
+    var profilePath = null;
 
-        for (let i = 0; i < tot; i++) {
+    for (let i = 0; i < tot; i++) {
 
-            profilePath = source.results[i].profile_path;
-            if (profilePath == null)
-                profilePath = '../Images/placeholder-vertical.jpg';
-            else
-                profilePath = imagePath + profilePath;
+        profilePath = source.results[i].profile_path;
+        if (profilePath == null)
+            profilePath = '../Images/placeholder-vertical.jpg';
+        else
+            profilePath = imagePath + profilePath;
 
-            $(location).append('<div class="col-4 col-md-2 py-2 personPicture" data-personid="' + source.results[i].id + '">'
-                + '<img class="img-fluid popular rounded shadow" src="' + profilePath + '"/>'
-                + '<h5>' + source.results[i].name + '<h5>'
-                + '</div>');
+        $(location).append('<div class="col-4 col-md-2 py-2 personPicture" data-personid="' + source.results[i].id + '">'
+            + '<img class="img-fluid popular rounded shadow" src="' + profilePath + '"/>'
+            + '<h5>' + source.results[i].name + '<h5>'
+            + '</div>');
+    }
+}
+
+function printPagination() {
+    $('#paginationNavigation').html("");
+    if (total_pages > 1) {
+        paginationStr =
+            '<nav>' +
+            '<ul class="pagination justify-content-center">' +
+            '<li class="page-item prevPaginationBtn">' +
+            '<a class="page-link" href="#">Previous</a>' +
+            '</li>';
+        if (pageNum <= 5) {
+            for (let i = (pageNum - pageNum) + 1; i < pageNum; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+            paginationStr +=
+                '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
+                '<a class= "page-link" href ="#">' + pageNum + '</a>' +
+                '</li>';
+            for (let i = pageNum + 1; i <= 10; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
         }
+        else if (pageNum <= total_pages - 5) {
+            for (let i = pageNum - 5; i < pageNum; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+            paginationStr +=
+                '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
+                '<a class= "page-link" href ="#">' + pageNum + '</a>' +
+                '</li>';
+            for (let i = pageNum + 1; i < pageNum + 5; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+        }
+        else {
+            for (let i = pageNum - 5; i < pageNum; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+            paginationStr +=
+                '<li class="page-item active paginationBtn" aria-current="page" data-page="' + pageNum + '">' +
+                '<a class= "page-link" href ="#">' + pageNum + '</a>' +
+                '</li>';
+            for (let i = pageNum + 1; i <= total_pages; i++) {
+                paginationStr +=
+                    '<li class="page-item paginationBtn" data-page="' + i + '">' +
+                    '<a class= "page-link" href ="#">' + i + '</a>' +
+                    '</li>';
+            }
+        }
+        paginationStr +=
+            '<li class="page-item nextPaginationBtn">' +
+            '<a class="page-link" href="#">Next</a>' +
+            '</li>' +
+            '</ul>' +
+            '</nav>';
+        $('#paginationNavigation').append(paginationStr);
+        checkPageNum();
     }
+}
 
-} // End of 'Functions'.
+function checkPageNum() {
+    if (pageNum <= 1) {
+        pageNum = 1;
+        $('.prevPaginationBtn').addClass("page-item prevPaginationBtn disabled");
+    }
+    if (pageNum == total_pages)
+        $('.nextPaginationBtn').addClass("page-item nextPaginationBtn disabled");
+}
+
+ // End of 'Functions'.
