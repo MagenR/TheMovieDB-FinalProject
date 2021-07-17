@@ -1,12 +1,9 @@
-﻿logged_user = "";
+﻿
+// global vars ------------------------------------------------------------------------------------
+
+logged_user = "";
 
 $(document).ready(function () {
-    /*
-    $('#accessUserBtn').click(getUser);
-    $('#logOutBtn').click(logOut);
-    $('#signUpBtn').click(setMaxDate);
-    $('#signUpModal').submit(signUp);
-    */
 
     $("#passwordTB").on("blur", validatePassword);
     
@@ -86,7 +83,7 @@ $(document).ready(function () {
             swal("Error!", err.responseJSON.Message, "error");
         }
 
-    } // End of 'Users.
+    } // End of Users.
 
 }
 
@@ -153,7 +150,6 @@ function logIn(user) {
     delete user.Password; // Remove password before saving to LS.
     localStorage.setItem('user', JSON.stringify(user));
     logged_user = JSON.parse(localStorage.getItem('user'));
-    /* $("#WlcmMsg").html("Hello, " + user.First_name + " " + user.Last_name + "."); */
     $("#logInDropdown").html(user.First_name + " " + user.Last_name);
     $("#loggedIn").show();
     $("#signupLogin").hide();
@@ -161,7 +157,6 @@ function logIn(user) {
 }
 
 function logOut() {
-    /* $("#WlcmMsg").html(""); */
     $("#loggedIn").hide();
     $("#signupLogin").show();
     localStorage.clear();

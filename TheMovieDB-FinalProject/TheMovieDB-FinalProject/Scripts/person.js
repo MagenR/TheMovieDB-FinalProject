@@ -1,7 +1,9 @@
-﻿// global vars ------------------------------------------------------------------------------------
-    key = "d8484ecfbfb906740724a447b5d63b12";
-    url = "https://api.themoviedb.org/";
-    imagePath = "https://image.tmdb.org/t/p/w500";
+﻿
+// global vars ------------------------------------------------------------------------------------
+
+key = "d8484ecfbfb906740724a447b5d63b12";
+url = "https://api.themoviedb.org/";
+imagePath = "https://image.tmdb.org/t/p/w500";
 
 $(document).ready(function () {
     const queryString = window.location.search;

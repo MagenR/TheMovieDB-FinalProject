@@ -1,10 +1,13 @@
 ﻿
+// global vars ------------------------------------------------------------------------------------
+
+key = "d8484ecfbfb906740724a447b5d63b12";
+url = "https://api.themoviedb.org/";
+imagePath = "https://image.tmdb.org/t/p/w500";
+
 // ---------------------------------------- Constroller functions--------------------------
 
 $(document).ready(function () {
-    key = "d8484ecfbfb906740724a447b5d63b12";
-    url = "https://api.themoviedb.org/";
-    imagePath = "https://image.tmdb.org/t/p/w500";
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -21,11 +24,6 @@ $(document).ready(function () {
     $('#seriesPanel').on('click', '.seriesTv', function () {
         getEpisodes($(this).attr('data-seriesid'));
     });
-    /*
-    $("#goToInsert").click(function () {
-        window.location.href = "../Pages/insert.html";
-    });
-    */
 
 });
 
@@ -158,7 +156,6 @@ function error(data) {
 
 function buildSeries(series) {
     for (let i = 0; i < series.length; i++) {
-        /*var seriesid = series[i].Tv_id;*/
         renderTv(series[i]);
     }
 }
@@ -202,6 +199,7 @@ function renderTv(tv) {
 }
 
 function renderEpisodes(episodes) {
+
     $("#episodes").html('');
     var posterPath = null;
 
