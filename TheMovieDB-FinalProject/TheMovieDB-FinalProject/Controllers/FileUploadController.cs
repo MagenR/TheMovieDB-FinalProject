@@ -13,33 +13,38 @@ namespace TheMovieDB_FinalProject.Controllers
 {
     public class FileUploadController : ApiController
     {
+
         [HttpPost]
         public HttpResponseMessage Post()
         {
-            string imageLink = "";
+            List<string> imageLinks = new List<string>();
             var httpContext = HttpContext.Current;
 
             // Check for any uploaded file  
             if (httpContext.Request.Files.Count > 0)
             {
-                HttpPostedFile httpPostedFile = httpContext.Request.Files[0];
+                //Loop through uploaded files  
+                for (int i = 0; i < httpContext.Request.Files.Count; i++)
+                {
+                    HttpPostedFile httpPostedFile = httpContext.Request.Files[i];
 
-                // this is an example of how you can extract addional values from the Ajax call
-                string name = httpContext.Request.Form["user_id"];
+                    // this is an example of how you can extract addional values from the Ajax call
+                    string name = httpContext.Request.Form["user_id"];
 
                     if (httpPostedFile != null)
                     {
                         // Construct file save path  
                         //var fileSavePath = Path.Combine(HostingEnvironment.MapPath(ConfigurationManager.AppSettings["fileUploadFolder"]), httpPostedFile.FileName);
-                        string ftype = httpPostedFile.FileName.Split('.').Last();
+                        string fname = httpPostedFile.FileName.Split('\\').Last();
                         var fileSavePath = Path.Combine(HostingEnvironment.MapPath("~/uploadedFiles"), name + ".png");
                         // Save the uploaded file  
                         httpPostedFile.SaveAs(fileSavePath);
-                        imageLink = "uploadedFiles/" + name + ".png";
+                        imageLinks.Add("uploadedFiles/" + name + ".png");
                     }
+                }
             }
             // Return status code  
-            return Request.CreateResponse(HttpStatusCode.Created, imageLink);
+            return Request.CreateResponse(HttpStatusCode.Created, imageLinks);
         }
 
     }

@@ -19,7 +19,28 @@ $(document).ready(function () {
     getSeriesFavs();
     showImage(userId);
 
-    $('#uploadProfilePic').click(uploadImg);
+    $('#uploadProfilePic').on('click', function () {
+        var data = new FormData();
+        var files = $("#profilePicInput").get(0).files;
+
+        if (files.length > 0) {
+            for (f = 0; f < files.length; f++) {
+                data.append("UploadedImage", files[f]);
+            }
+            data.append("user_id", logged_user.User_id);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "../Api/FileUpload",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: showImage(userId),
+            error: error
+        });
+        return false;
+    });
 
     $('#seriesPanel').on('click', '.seriesTv', function () {
         tvId = $(this).attr('data-seriesid');
@@ -144,25 +165,6 @@ $(document).ready(function () {
         $('#uPhone').html(user.Phone_num);
         $('#uAddress').html(user.Address);
         $('#uGenre').html(user.Fav_genre);
-    }
-
-    function uploadImg() {
-        location.reload();
-        var data = new FormData();
-        var files = $('#profilePicInput').get(0).files;
-        data.append('UploadedImage', files[0]);
-        data.append('user_id', logged_user.User_id);
-
-        $.ajax({
-            type: "POST",
-            url: "../Api/FileUpload",
-            contentType: false,
-            processData: false,
-            data: data,
-            success: showImage,
-            error: error
-        });
-        return false;
     }
 
     function showImage(user_id) {
