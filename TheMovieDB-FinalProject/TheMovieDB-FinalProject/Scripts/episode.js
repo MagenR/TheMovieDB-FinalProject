@@ -14,6 +14,11 @@ $(function () {
     season_num = urlParams.get('season_num');
     episode_num = urlParams.get('episode_num');
 
+    $('li .profile').click(function () {
+        $logged_user = JSON.parse(localStorage.getItem('user'));
+        window.location.href = "user.html?id=" + $logged_user.User_id;
+    });
+
     getEpisode(tv_id, season_num, episode_num);
     initComments();
 });

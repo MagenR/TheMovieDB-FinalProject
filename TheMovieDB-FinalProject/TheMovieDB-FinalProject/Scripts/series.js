@@ -46,6 +46,11 @@ $(document).ready(function () {
         window.location.href = "user.html?id=" + $logged_user.User_id;
     });
 
+    $('#similarTv').on('click', '.tvPoster', function () {
+        $targetId = $(this).data('seriesid');
+        window.location.href = "series.html?id=" + $targetId;
+    });
+
     $('#SaveEpisodeBtn').click(addEpisodePreference);
     $('#DiscussEpisodeBtn').click(function () {
         window.location.href = "episode.html?tv_id=" + tvId + "&season_num=" + episode.season_number + "&episode_num=" + episode.episode_number;
@@ -75,11 +80,7 @@ $(document).ready(function () {
             renderTvSection(tv);
             renderSeasonsList(tv);
             getCast();
-            /*
-            getReviews();
-            getVideos();
             getSimilarTv();
-            */
         }
 
         //--------------------------------------- POST --------------------------------------
@@ -259,6 +260,25 @@ $(document).ready(function () {
 
     }
 
+    // Similar Tv Shows --------------------------------------------------------------------------
+
+    {
+
+        //--------------------------------------- GET -------------------------------------
+
+        function getSimilarTv() {
+            let apiCall = url + "3/tv/" + tvId + "/similar?" + "api_key=" + key;
+
+            ajaxCall("GET", apiCall, "", getSimilarSuccessCB, getErrorCB);
+        }
+
+        function getSimilarSuccessCB(similar) {
+            similarTv = similar.results;
+            renderSimilarTv(similarTv);
+        }
+
+    }
+
     // Error call back ---------------------------------------------------------------------------
 
     function getErrorCB(err) {
@@ -371,7 +391,7 @@ function addEpisodePreference() {
             + '<h5>' + person.name + '</h5>'
             + '</div>';
 
-        $('.owl-carousel').owlCarousel('add', entry).owlCarousel('update');
+        $('#cast').owlCarousel('add', entry).owlCarousel('update');
     }
 
     function renderEpisodeModal(episode) {
@@ -379,6 +399,25 @@ function addEpisodePreference() {
         $('#episodeModal .modal-body img').attr("src", imagePath + episode.still_path);
         $('#episodeModal .modal-body .air-date').html(episode.air_date);
         $('#episodeModal .modal-body .episode-overview').html(episode.overview);
+    }
+
+    function renderSimilarTv(similarTv) {
+        var posterPath = null;
+        for (let i = 0; i < similarTv.length; i++) {
+
+            posterPath = similarTv[i].poster_path;
+            if (posterPath == null)
+                posterPath = '../Images/placeholder-vertical.jpg';
+            else
+                posterPath = imagePath + posterPath;
+
+            var entry = '<div class="tvPoster" data-seriesid="' + similarTv[i].id + '">'
+                + '<img class="img-fluid popular rounded shadow" src="' + posterPath + '"/>'
+                + '<h5>' + similarTv[i].name + '<h5>'
+                + '</div>';
+
+            $('#similarTv').owlCarousel('add', entry).owlCarousel('update');
+        }
     }
 
 }

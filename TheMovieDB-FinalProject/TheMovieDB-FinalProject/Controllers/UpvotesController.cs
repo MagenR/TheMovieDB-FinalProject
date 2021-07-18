@@ -23,9 +23,6 @@ namespace TheMovieDB_FinalProject.Controllers
             return "value";
         }
 
-        // POST api/<controller>
-
-
         // PUT api/<controller>/5
         public HttpResponseMessage Post([FromBody] Upvote u)
         {
@@ -40,10 +37,7 @@ namespace TheMovieDB_FinalProject.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.Conflict, ex.Message);
             }
         }
-        public void DeleteUpvote(int user_id, int comment_id)
-        {
 
-        }
         // DELETE api/<controller>/5
         public HttpResponseMessage Delete([FromBody] Upvote u)
         {
