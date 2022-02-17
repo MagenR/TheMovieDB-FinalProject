@@ -276,7 +276,7 @@ function printPagination() {
             '<a class="page-link" href="#">Previous</a>' +
             '</li>';
         if (pageNum <= 5) {
-            for (let i = (pageNum - pageNum) + 1; i < pageNum; i++) {
+            for (let i = 1; i < pageNum; i++) {
                 paginationStr +=
                     '<li class="page-item paginationBtn" data-page="' + i + '">' +
                     '<a class= "page-link" href ="#">' + i + '</a>' +
